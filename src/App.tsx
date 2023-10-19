@@ -61,10 +61,10 @@ export function App(props: {}) {
       <h2 className="text-center my-4">French Practice App</h2>
       <div className="sticky-top p-3 d-flex justify-content-between mb-3">
         <div>
-          <h3>Total Score: {session.puzzles.reduce((total, puzzle) => total + puzzle.score, 0)}</h3>
+          <h3>Score Total : {session.puzzles.reduce((total, puzzle) => total + puzzle.score, 0)}</h3>
         </div>
         <div>
-          <h3>Highest Score: {Math.max(...session.puzzles.map(puzzle => puzzle.score))}</h3>
+          <h3>Score Le Plus Élevé : {Math.max(...session.puzzles.map(puzzle => puzzle.score))}</h3>
         </div>
         <div>
           <button className="btn btn-secondary btn-sm" onClick={() => {
@@ -79,7 +79,7 @@ export function App(props: {}) {
                 }]
               }))
             }
-          }}>Add Phrase</button>
+          }}>Ajouter une phrase</button>
         </div>
       </div>
 
@@ -136,7 +136,7 @@ function PuzzleComponent(props: {
     const system = `You are a French tutor for a grade 5 student. You will be provided with a French sentence that you should correct for grammar and spelling. 
     First break it into words and return a result for each word as to whether it is correct or not. "J'aime" is one word.
     If the word is incorrect, provide a correction. If the word is correct, leave the correction blank.
-    Do not worry about punctuation. 
+    Do not worry about punctuation. The capitalization of all words must be correct.
     
     The phrase should be a reasonable French translation of "${puzzle.prompt}".
     
@@ -214,10 +214,10 @@ function PuzzleComponent(props: {
   return (
     <div className="mt-5">
       <h5>
-        <span className="text-muted">Translate: </span>{props.puzzle.prompt}
+        <span className="text-muted">Traduire: </span>{props.puzzle.prompt}
         <span style={{float: 'right'}}>
           {props.puzzle.status === "complete" &&
-            <p>Score: {props.puzzle.score}</p>
+            <p>Score : {props.puzzle.score}</p>
           }
         </span>
       </h5>
@@ -230,9 +230,9 @@ function PuzzleComponent(props: {
 
       {props.puzzle.status !== "complete" &&
         <div className="input-group mb-3">
-          <input type="text" className="form-control" placeholder="Enter your guess" value={guess} onChange={e => setGuess(e.target.value)} onKeyDown={handleKeyDown} disabled={busy} />
+          <input type="text" className="form-control" placeholder="Entrez votre supposition" value={guess} onChange={e => setGuess(e.target.value)} onKeyDown={handleKeyDown} disabled={busy} />
           <button className="btn btn-primary" type="button" onClick={() => { correctGuess() }} disabled={busy}>
-            Guess
+            Deviner
           </button>
         </div>
       }
@@ -252,10 +252,11 @@ function GuessesComponent(props: { guesses: Guess[] }) {
 
 function GuessComponent(props: { guess: Guess }) {
   return (
-    <div style={{ fontSize: 18, margin: 10 }}>
+    <div style={{ fontSize: 18, margin: 15 }}>
       {props.guess.words.map((word, index) => (
-        <span style={{ backgroundColor: word.correct ? '#00ff0060' : '#ff000060', padding: 3 }}>
-          {word.word}{index !== props.guess.words.length - 1 ? ' ' : ''}
+        <span style={{ backgroundColor: word.correct ? '#00ff0060' : '#ff000060', padding: "5px 3px" }}>
+          {word.word}
+          {/* {index !== props.guess.words.length - 1 ? ' ' : ''} */}
         </span>
       ))}
     </div>
