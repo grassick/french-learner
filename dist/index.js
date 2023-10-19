@@ -25290,8 +25290,11 @@ function App(props) {
       status: "pending"
     }))
   });
-  const lastDisplayedIndex = session.puzzles.findIndex((puzzle) => puzzle.status === "pending" || puzzle.status === "in-progress");
-  return /* @__PURE__ */ import_react.default.createElement("div", { className: "container" }, /* @__PURE__ */ import_react.default.createElement("h2", { className: "text-center my-4" }, "Application d'entra\xEEnement au fran\xE7ais"), /* @__PURE__ */ import_react.default.createElement("div", { className: "sticky-top p-3 d-flex justify-content-between mb-3" }, /* @__PURE__ */ import_react.default.createElement("div", null, /* @__PURE__ */ import_react.default.createElement("h3", null, "Score Total : ", session.puzzles.reduce((total, puzzle) => total + puzzle.score, 0))), /* @__PURE__ */ import_react.default.createElement("div", null, /* @__PURE__ */ import_react.default.createElement("h3", null, "Score Le Plus \xC9lev\xE9 : ", Math.max(...session.puzzles.map((puzzle) => puzzle.score)))), /* @__PURE__ */ import_react.default.createElement("div", null, /* @__PURE__ */ import_react.default.createElement("button", { className: "btn btn-secondary btn-sm", onClick: () => {
+  let lastDisplayedIndex = session.puzzles.findIndex((puzzle) => puzzle.status === "pending" || puzzle.status === "in-progress");
+  if (lastDisplayedIndex === -1) {
+    lastDisplayedIndex = session.puzzles.length - 1;
+  }
+  return /* @__PURE__ */ import_react.default.createElement("div", { className: "container" }, /* @__PURE__ */ import_react.default.createElement("h2", { className: "text-center my-4" }, "Application d'entra\xEEnement au fran\xE7ais"), /* @__PURE__ */ import_react.default.createElement("div", { className: "sticky-top p-3 d-flex justify-content-between mb-3" }, /* @__PURE__ */ import_react.default.createElement("div", null, /* @__PURE__ */ import_react.default.createElement("h5", null, "Score Total : ", session.puzzles.reduce((total, puzzle) => total + puzzle.score, 0)), /* @__PURE__ */ import_react.default.createElement("h5", null, "Score Le Plus \xC9lev\xE9 : ", Math.max(...session.puzzles.map((puzzle) => puzzle.score)))), /* @__PURE__ */ import_react.default.createElement("div", null, /* @__PURE__ */ import_react.default.createElement("button", { className: "btn btn-secondary btn-sm", onClick: () => {
     const phrase = window.prompt("Enter a phrase");
     if (phrase) {
       setSession((prevState) => ({

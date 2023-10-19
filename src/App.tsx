@@ -54,17 +54,18 @@ export function App(props: {}) {
     }))
   })
 
-  const lastDisplayedIndex = session.puzzles.findIndex(puzzle => puzzle.status === "pending" || puzzle.status === "in-progress")
+  let lastDisplayedIndex = session.puzzles.findIndex(puzzle => puzzle.status === "pending" || puzzle.status === "in-progress")
+  if (lastDisplayedIndex === -1) {
+    lastDisplayedIndex = session.puzzles.length - 1
+  }
 
   return (
     <div className="container">
       <h2 className="text-center my-4">Application d'entraînement au français</h2>
       <div className="sticky-top p-3 d-flex justify-content-between mb-3">
         <div>
-          <h3>Score Total : {session.puzzles.reduce((total, puzzle) => total + puzzle.score, 0)}</h3>
-        </div>
-        <div>
-          <h3>Score Le Plus Élevé : {Math.max(...session.puzzles.map(puzzle => puzzle.score))}</h3>
+          <h5>Score Total : {session.puzzles.reduce((total, puzzle) => total + puzzle.score, 0)}</h5>
+          <h5>Score Le Plus Élevé : {Math.max(...session.puzzles.map(puzzle => puzzle.score))}</h5>
         </div>
         <div>
           <button className="btn btn-secondary btn-sm" onClick={() => {
