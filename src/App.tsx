@@ -40,7 +40,8 @@ interface Word {
 
 const initialPhrases = [
   "I love tornadoes.",
-  "I miss Felix, my dog who lives in Winnipeg.",
+  "I miss Felix.",
+  "My grandfather lives in Winnipeg.",
 ]
 
 export function App(props: {}) {
@@ -53,16 +54,37 @@ export function App(props: {}) {
     }))
   })
 
+  const lastDisplayedIndex = session.puzzles.findIndex(puzzle => puzzle.status === "pending" || puzzle.status === "in-progress")
+
   return (
     <div className="container">
-      <h2 className="text-center my-4">French Learner App</h2>
-      <div className="sticky-top bg-light p-3 d-flex justify-content-between mb-3">
-        <h3>Total Score: {session.puzzles.reduce((total, puzzle) => total + puzzle.score, 0)}</h3>
-        <h3>Highest Score: {Math.max(...session.puzzles.map(puzzle => puzzle.score))}</h3>
+      <h2 className="text-center my-4">French Practice App</h2>
+      <div className="sticky-top p-3 d-flex justify-content-between mb-3">
+        <div>
+          <h3>Total Score: {session.puzzles.reduce((total, puzzle) => total + puzzle.score, 0)}</h3>
+        </div>
+        <div>
+          <h3>Highest Score: {Math.max(...session.puzzles.map(puzzle => puzzle.score))}</h3>
+        </div>
+        <div>
+          <button className="btn btn-secondary btn-sm" onClick={() => {
+            const phrase = window.prompt("Enter a phrase")
+            if (phrase) {
+              setSession(prevState => ({
+                puzzles: [...prevState.puzzles, {
+                  prompt: phrase,
+                  guesses: [],
+                  score: 0,
+                  status: "pending"
+                }]
+              }))
+            }
+          }}>Add Phrase</button>
+        </div>
       </div>
 
       {session.puzzles
-        .slice(0, session.puzzles.findIndex(puzzle => puzzle.status === "pending" || puzzle.status === "in-progress") + 1)
+        .slice(0, lastDisplayedIndex + 1)
         .map((puzzle, index) => (
           <PuzzleComponent
             puzzle={puzzle}
@@ -73,6 +95,21 @@ export function App(props: {}) {
             }}
           />
         ))}
+
+      <div style={{ marginTop: 100 }}>
+        {session.puzzles
+          .slice(lastDisplayedIndex + 1)
+          .map((puzzle, index) => (
+            <div key={index} className="mb-2">
+              <span>{puzzle.prompt}</span>
+              <button className="btn btn-sm btn-link" onClick={() => {
+                const puzzles = session.puzzles.slice()
+                puzzles.splice(lastDisplayedIndex + 1 + index, 1)
+                setSession({ puzzles })
+              }}>X</button>
+            </div>
+          ))}
+      </div>
     </div>
   )
 }
@@ -95,11 +132,13 @@ function PuzzleComponent(props: {
   }
 
   function correctGuess() {
-      // Create the prompt
-      const system = `You are a French tutor for a grade 5 student. You will be provided with a French sentence that you should correct for grammar and spelling. 
+    // Create the prompt
+    const system = `You are a French tutor for a grade 5 student. You will be provided with a French sentence that you should correct for grammar and spelling. 
     First break it into words and return a result for each word as to whether it is correct or not. "J'aime" is one word.
     If the word is incorrect, provide a correction. If the word is correct, leave the correction blank.
-    Do not worry about punctuation.
+    Do not worry about punctuation. 
+    
+    The phrase should be a reasonable French translation of "${puzzle.prompt}".
     
     Output JSON in the following format:
 
@@ -111,90 +150,90 @@ function PuzzleComponent(props: {
     
     Only output the JSON and nothing else.`
 
-      // Create messages
-      const messages: OpenAI.Chat.Completions.ChatCompletionMessage[] = [
-        {
-          role: "system",
-          content: system,
-        },
-        {
-          role: "user",
-          content: guess,
-        }
-      ]
+    // Create messages
+    const messages: OpenAI.Chat.Completions.ChatCompletionMessage[] = [
+      {
+        role: "system",
+        content: system,
+      },
+      {
+        role: "user",
+        content: guess,
+      }
+    ]
 
-      setBusy(true)
+    setBusy(true)
 
-      // Call OpenAI
-      openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
-        temperature: 0.2,
-        messages: messages,
-      }).then((completion) => {
-        // Get response
-        const response = completion.choices[0].message?.content || ""
+    // Call OpenAI
+    openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      temperature: 0.2,
+      messages: messages,
+    }).then((completion) => {
+      // Get response
+      const response = completion.choices[0].message?.content || ""
 
-        // Parse response into JSON
-        const words = JSON.parse(response) as Word[]
+      // Parse response into JSON
+      const words = JSON.parse(response) as Word[]
 
-        console.log(words)
+      console.log(words)
 
-        // Update the puzzle
-        const newPuzzle: Puzzle = {
-          ...puzzle,
-          guesses: [
-            ...puzzle.guesses,
-            {
-              guess,
-              words
-            }
-          ]
-        }
-
-        if (words.every(word => word.correct)) {
-          newPuzzle.status = "complete"
-          let score = newPuzzle.guesses[0].words.filter(word => word.correct).length
-          if (newPuzzle.guesses[0].words.length === score) {
-            score *= 2
-          } else {
-            score -= (newPuzzle.guesses.length - 1)
+      // Update the puzzle
+      const newPuzzle: Puzzle = {
+        ...puzzle,
+        guesses: [
+          ...puzzle.guesses,
+          {
+            guess,
+            words
           }
-          newPuzzle.score = score
-          setGuess("")
-        }
+        ]
+      }
 
-        onPuzzleChange(newPuzzle)
-      }).catch((err) => {
-        alert("Error: " + err.message)
-      }).finally(() => {
-        setBusy(false)
-      })
+      if (words.every(word => word.correct)) {
+        newPuzzle.status = "complete"
+        let score = newPuzzle.guesses[0].words.filter(word => word.correct).length
+        if (newPuzzle.guesses[0].words.length === score) {
+          score *= 2
+        } else {
+          score -= (newPuzzle.guesses.length - 1)
+        }
+        newPuzzle.score = score
+        setGuess("")
+      }
+
+      onPuzzleChange(newPuzzle)
+    }).catch((err) => {
+      alert("Error: " + err.message)
+    }).finally(() => {
+      setBusy(false)
+    })
   }
 
 
   return (
-    <div>
+    <div className="mt-5">
       <h5>
         <span className="text-muted">Translate: </span>{props.puzzle.prompt}
-        {props.puzzle.status === "complete" &&
-          <p>Score: {props.puzzle.score}</p>
-        }
+        <span style={{float: 'right'}}>
+          {props.puzzle.status === "complete" &&
+            <p>Score: {props.puzzle.score}</p>
+          }
+        </span>
       </h5>
       <GuessesComponent guesses={props.puzzle.guesses} />
       {busy &&
-          <div className="spinner-border text-secondary" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        }
+        <div className="spinner-border text-secondary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      }
 
-      { props.puzzle.status !== "complete" &&
+      {props.puzzle.status !== "complete" &&
         <div className="input-group mb-3">
           <input type="text" className="form-control" placeholder="Enter your guess" value={guess} onChange={e => setGuess(e.target.value)} onKeyDown={handleKeyDown} disabled={busy} />
-          <div className="input-group-append">
-            <button className="btn btn-outline-secondary" type="button" onClick={() => { correctGuess() }} disabled={busy}>
-              Guess
-            </button>
-          </div>
+          <button className="btn btn-primary" type="button" onClick={() => { correctGuess() }} disabled={busy}>
+            Guess
+          </button>
         </div>
       }
     </div>
