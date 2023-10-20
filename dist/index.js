@@ -25314,6 +25314,11 @@ function App(props) {
         const puzzles = session.puzzles.slice();
         puzzles[index] = puzzle2;
         setSession({ puzzles });
+      },
+      onPuzzleDelete: () => {
+        const puzzles = session.puzzles.slice();
+        puzzles.splice(index, 1);
+        setSession({ puzzles });
       }
     }
   )), /* @__PURE__ */ import_react.default.createElement("div", { style: { marginTop: 100 } }, session.puzzles.slice(lastDisplayedIndex + 1).map((puzzle, index) => /* @__PURE__ */ import_react.default.createElement("div", { key: index, className: "mb-2" }, /* @__PURE__ */ import_react.default.createElement("span", null, puzzle.prompt), /* @__PURE__ */ import_react.default.createElement("button", { className: "btn btn-sm btn-link", onClick: () => {
@@ -25396,7 +25401,11 @@ function PuzzleComponent(props) {
       setBusy(false);
     });
   }
-  return /* @__PURE__ */ import_react.default.createElement("div", { className: "mt-5" }, /* @__PURE__ */ import_react.default.createElement("h5", null, /* @__PURE__ */ import_react.default.createElement("span", { className: "text-muted" }, "Traduire: "), props.puzzle.prompt, /* @__PURE__ */ import_react.default.createElement("span", { style: { float: "right" } }, props.puzzle.status === "complete" && /* @__PURE__ */ import_react.default.createElement("p", null, "Score : ", props.puzzle.score))), /* @__PURE__ */ import_react.default.createElement(GuessesComponent, { guesses: props.puzzle.guesses }), busy && /* @__PURE__ */ import_react.default.createElement("div", { className: "spinner-border text-secondary", role: "status" }, /* @__PURE__ */ import_react.default.createElement("span", { className: "visually-hidden" }, "Loading...")), props.puzzle.status !== "complete" && /* @__PURE__ */ import_react.default.createElement("div", { className: "input-group mb-3" }, /* @__PURE__ */ import_react.default.createElement("input", { type: "text", className: "form-control", placeholder: "Entrez votre supposition", value: guess, onChange: (e) => setGuess(e.target.value), onKeyDown: handleKeyDown, disabled: busy }), /* @__PURE__ */ import_react.default.createElement("button", { className: "btn btn-primary", type: "button", onClick: () => {
+  return /* @__PURE__ */ import_react.default.createElement("div", { className: "mt-5" }, /* @__PURE__ */ import_react.default.createElement("h5", null, /* @__PURE__ */ import_react.default.createElement("span", { className: "text-muted", onDoubleClick: () => {
+    if (window.confirm("Are you sure you want to delete this item?")) {
+      props.onPuzzleDelete();
+    }
+  } }, "Traduire: "), props.puzzle.prompt, /* @__PURE__ */ import_react.default.createElement("span", { style: { float: "right" } }, props.puzzle.status === "complete" && /* @__PURE__ */ import_react.default.createElement("p", null, "Score : ", props.puzzle.score))), /* @__PURE__ */ import_react.default.createElement(GuessesComponent, { guesses: props.puzzle.guesses }), busy && /* @__PURE__ */ import_react.default.createElement("div", { className: "spinner-border text-secondary", role: "status" }, /* @__PURE__ */ import_react.default.createElement("span", { className: "visually-hidden" }, "Loading...")), props.puzzle.status !== "complete" && /* @__PURE__ */ import_react.default.createElement("div", { className: "input-group mb-3" }, /* @__PURE__ */ import_react.default.createElement("input", { type: "text", className: "form-control", placeholder: "Entrez votre supposition", value: guess, onChange: (e) => setGuess(e.target.value), onKeyDown: handleKeyDown, disabled: busy }), /* @__PURE__ */ import_react.default.createElement("button", { className: "btn btn-primary", type: "button", onClick: () => {
     correctGuess();
   }, disabled: busy }, "Deviner")));
 }
@@ -25404,7 +25413,20 @@ function GuessesComponent(props) {
   return /* @__PURE__ */ import_react.default.createElement("div", null, props.guesses.map((guess) => /* @__PURE__ */ import_react.default.createElement(GuessComponent, { guess })));
 }
 function GuessComponent(props) {
-  return /* @__PURE__ */ import_react.default.createElement("div", { style: { fontSize: 18, margin: 15 } }, props.guess.words.map((word, index) => /* @__PURE__ */ import_react.default.createElement("span", { style: { backgroundColor: word.correct ? "#00ff0060" : "#ff000060", padding: "5px 3px" } }, word.word)));
+  return /* @__PURE__ */ import_react.default.createElement("div", { style: { fontSize: 18, margin: 15 } }, props.guess.words.map((word, index) => /* @__PURE__ */ import_react.default.createElement(
+    "span",
+    {
+      style: { backgroundColor: word.correct ? "#00ff0060" : "#ff000060", padding: "5px 3px" },
+      onDoubleClick: (ev) => {
+        ev.preventDefault();
+        ev.stopPropagation();
+        if (word.correction) {
+          alert(word.correction);
+        }
+      }
+    },
+    word.word
+  )));
 }
 function usePersistedState(key, defaultValue) {
   const [state, setState] = (0, import_react.useState)(() => {
