@@ -255,7 +255,16 @@ function GuessComponent(props: { guess: Guess }) {
   return (
     <div style={{ fontSize: 18, margin: 15 }}>
       {props.guess.words.map((word, index) => (
-        <span style={{ backgroundColor: word.correct ? '#00ff0060' : '#ff000060', padding: "5px 3px" }}>
+        <span 
+          style={{ backgroundColor: word.correct ? '#00ff0060' : '#ff000060', padding: "5px 3px" }}
+          onDoubleClick={(ev) => {
+            ev.preventDefault()
+            ev.stopPropagation()
+            if (word.correction) {
+              alert(word.correction)
+            }
+          }}
+          >
           {word.word}
           {/* {index !== props.guess.words.length - 1 ? ' ' : ''} */}
         </span>
