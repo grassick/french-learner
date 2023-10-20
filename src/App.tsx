@@ -94,6 +94,11 @@ export function App(props: {}) {
               puzzles[index] = puzzle
               setSession({ puzzles })
             }}
+            onPuzzleDelete={() => {
+              const puzzles = session.puzzles.slice()
+              puzzles.splice(index, 1)
+              setSession({ puzzles })
+            }}
           />
         ))}
 
@@ -118,6 +123,7 @@ export function App(props: {}) {
 function PuzzleComponent(props: {
   puzzle: Puzzle
   onPuzzleChange: (puzzle: Puzzle) => void
+  onPuzzleDelete: () => void
 }) {
   const { puzzle, onPuzzleChange } = props
 
@@ -215,7 +221,12 @@ function PuzzleComponent(props: {
   return (
     <div className="mt-5">
       <h5>
-        <span className="text-muted">Traduire: </span>{props.puzzle.prompt}
+        <span className="text-muted" onDoubleClick={() => {
+          if (window.confirm('Are you sure you want to delete this item?')) {
+            // Delete puzzle
+            props.onPuzzleDelete()
+          }
+        }}>Traduire: </span>{props.puzzle.prompt}
         <span style={{float: 'right'}}>
           {props.puzzle.status === "complete" &&
             <p>Score : {props.puzzle.score}</p>
