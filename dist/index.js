@@ -23542,7 +23542,7 @@ function App2(props) {
 }
 function PuzzleComponent(props) {
   const { puzzle, onPuzzleChange } = props;
-  const [guess, setGuess] = (0, import_react.useState)("");
+  const [guess, setGuess] = (0, import_react.useState)(puzzle.guesses[puzzle.guesses.length - 1]?.text || "");
   const [busy, setBusy] = (0, import_react.useState)(false);
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {

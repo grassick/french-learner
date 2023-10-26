@@ -122,7 +122,7 @@ function PuzzleComponent(props: {
 }) {
   const { puzzle, onPuzzleChange } = props
 
-  const [guess, setGuess] = useState("")
+  const [guess, setGuess] = useState(puzzle.guesses[puzzle.guesses.length - 1]?.text || "")
 
   const [busy, setBusy] = useState(false)
 
