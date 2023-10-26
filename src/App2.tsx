@@ -250,7 +250,11 @@ function GuessComponent(props: { guess: Guess }) {
         const error = props.guess.errors.find(e => index >= e.offset && index < e.offset + e.length)
         return (
           <span
-            style={error ? { backgroundColor: '#ff000060' } : { backgroundColor: '#00ff0060' }}
+            style={{ 
+              backgroundColor: error ? '#ff000060' : '#00ff0060', 
+              padding: index === 0 ? "5px 0px 5px 5px" : index === props.guess.text.length - 1 ? "5px 5px 5px 0px" : "5px 0px",
+              userSelect: 'none'
+            }}
             onDoubleClick={(ev) => {
               ev.preventDefault()
               ev.stopPropagation()
