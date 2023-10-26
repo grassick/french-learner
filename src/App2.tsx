@@ -158,7 +158,7 @@ function PuzzleComponent(props: {
         offset: error.offset,
         length: error.length,
         type: error.type,
-        better: error.better
+        better: error.better.join(", ")
       }))
 
       // Update the puzzle
@@ -255,7 +255,7 @@ function GuessComponent(props: { guess: Guess }) {
               ev.preventDefault()
               ev.stopPropagation()
               if (error) {
-                alert(`Error at position ${error.offset} for length ${error.length}`)
+                alert(error.better || "No suggestion available")
               }
             }}
           >
