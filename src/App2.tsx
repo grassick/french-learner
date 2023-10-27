@@ -245,7 +245,7 @@ function GuessesComponent(props: { guesses: Guess[] }) {
 
 function GuessComponent(props: { guess: Guess }) {
   return (
-    <div style={{ fontSize: 18, margin: 15 }}>
+    <div style={{ fontSize: 18, margin: 15, lineHeight: 2 }}>
       {props.guess.text.split('').map((char, index) => {
         const error = props.guess.errors.find(e => index >= e.offset && index < e.offset + e.length)
         return (
