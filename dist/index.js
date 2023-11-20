@@ -26547,7 +26547,7 @@ if (!rapidAPIKey) {
   localStorage.setItem("rapidAPIKey", rapidAPIKey);
 }
 var initialPhrases = [
-  "Julien et Jules avaient pr\xE9par\xE9 leurs sacs \xE0 dos pour une aventure nocturne dans les bois.",
+  "Justin et Mario avaient pr\xE9par\xE9 leurs sacs \xE0 dos pour une aventure nocturne dans les bois.",
   "Le ciel \xE9toil\xE9 \xE9tait beau tandis qu'ils montaient leur tente pr\xE8s d'un vieux ch\xEAne.",
   "Soudain, un cri myst\xE9rieux venant de la for\xEAt les fit sursauter.",
   "Arm\xE9s de lampes de poche, ils d\xE9cid\xE8rent d'explorer les environs avec prudence.",
@@ -26556,27 +26556,27 @@ var initialPhrases = [
   "Ils entendirent le murmure de l'eau avant m\xEAme de voir les reflets argent\xE9s de la cascade.",
   "Malgr\xE9 l'obscurit\xE9, ils poursuivirent leur chemin en suivant les indications pr\xE9cises.",
   "Au petit matin, apr\xE8s une nuit d'aventures, ils d\xE9couvrirent le minerai scintillant sous les premiers rayons.",
-  "Heureux de leur trouvaille, Julien et Louis promirent de revenir explorer davantag.",
-  "Julien et Louis d\xE9cidaient de construire une maquette d'avion avec Jules le weekend prochain.",
+  "Heureux de leur trouvaille, Justin et Liam promirent de revenir explorer davantag.",
+  "Justin et Liam d\xE9cidaient de construire une maquette d'avion avec Mario le weekend prochain.",
   "Ils passaient des heures \xE0 dessiner les plans, inspir\xE9s par les avions de chasse.",
-  "En cherchant des mat\xE9riaux, Julien trouva un vieux moteur dans le grenier de son grand-p\xE8re.",
-  "Louis proposait d'utiliser des feuilles d'aluminium pour faire les ailes de l'avion.",
-  "Jules avait l'id\xE9e de peindre la maquette en rouge et noir, comme un vrai avion de combat.",
+  "En cherchant des mat\xE9riaux, Justin trouva un vieux moteur dans le grenier de son grand-p\xE8re.",
+  "Liam proposait d'utiliser des feuilles d'aluminium pour faire les ailes de l'avion.",
+  "Mario avait l'id\xE9e de peindre la maquette en rouge et noir, comme un vrai avion de combat.",
   "Ils travaillaient avec attention, veillant \xE0 ne pas laisser de colle sur la table.",
   "Apr\xE8s plusieurs jours de travail, leur avion \xE9tait pr\xEAt \xE0 \xEAtre pr\xE9sent\xE9 \xE0 la foire scientifique.",
   "Le jour de la foire, ils installaient leur stand et expliquaient le fonctionnement de l'avion aux visiteurs.",
   "Ils gagnaient le premier prix pour la cr\xE9ativit\xE9 et la qualit\xE9 de leur travail.",
   "Fiers de leur succ\xE8s, ils r\xEAvaient d\xE9j\xE0 \xE0 leur prochain projet de scienc.",
-  "Un soir, Julien observait les \xE9toiles en se demandant s'il y avait de la vie sur Mars.",
-  "Louis lui avait pr\xEAt\xE9 un livre sur les fus\xE9es et les voyages dans l'espace.",
+  "Un soir, Justin observait les \xE9toiles en se demandant s'il y avait de la vie sur Mars.",
+  "Liam lui avait pr\xEAt\xE9 un livre sur les fus\xE9es et les voyages dans l'espace.",
   "Ils planifiaient de construire une maquette de fus\xE9e pour la lancer dans le jardin.",
-  "Jules se joignait \xE0 eux avec des plans d\xE9taill\xE9s d'un lanceur spatial qu'il avait dessin\xE9s.",
+  "Mario se joignait \xE0 eux avec des plans d\xE9taill\xE9s d'un lanceur spatial qu'il avait dessin\xE9s.",
   "Ils collectaient des bouteilles en plastique, du carton et du ruban adh\xE9sif pour leur projet.",
   "La construction de la fus\xE9e demandait de la pr\xE9cision et beaucoup de patience.",
   "Une fois termin\xE9e, la fus\xE9e mesurait pr\xE8s d'un m\xE8tre de haut et semblait pr\xEAte pour le d\xE9collage.",
   "Ils choisissaient un jour ensoleill\xE9 pour le lancement et invitaient toute la classe \xE0 venir voir.",
   "La fus\xE9e s'\xE9levait dans le ciel, laissant une tra\xEEn\xE9e de fum\xE9e, sous les applaudissements.",
-  "Impressionn\xE9s par leur exploit, Julien et ses amis d\xE9cidaient de visiter un mus\xE9e de l'espace."
+  "Impressionn\xE9s par leur exploit, Justin et ses amis d\xE9cidaient de visiter un mus\xE9e de l'espace."
 ];
 function App3(props) {
   const [session, setSession] = usePersistedState("sessions3", {
@@ -26729,11 +26729,14 @@ function GuessesComponent(props) {
 function GuessComponent(props) {
   return /* @__PURE__ */ import_react.default.createElement("div", { style: { fontSize: 18, margin: 15, lineHeight: 2 } }, props.guess.text.split("").map((char, index) => {
     const error = props.guess.errors.find((e) => index >= e.offset && index < e.offset + e.length);
+    const prevError = props.guess.errors.find((e) => index - 1 >= e.offset && index - 1 < e.offset + e.length);
+    const currentError = char.trim() ? error : prevError;
     return /* @__PURE__ */ import_react.default.createElement(
       "span",
       {
         style: {
-          backgroundColor: error ? "#ff000060" : "#00ff0060",
+          //            backgroundColor: error ? '#ff000060' : '#00ff0060', 
+          backgroundColor: currentError ? void 0 : "#00ff0060",
           padding: index === 0 ? "5px 0px 5px 5px" : index === props.guess.text.length - 1 ? "5px 5px 5px 0px" : "5px 0px",
           userSelect: "none"
         },
