@@ -52,7 +52,7 @@ interface Error {
 }
 
 const initialPhrases = [
-  "Julien et Jules avaient préparé leurs sacs à dos pour une aventure nocturne dans les bois.", 
+  "Justin et Mario avaient préparé leurs sacs à dos pour une aventure nocturne dans les bois.", 
   "Le ciel étoilé était beau tandis qu'ils montaient leur tente près d'un vieux chêne.", 
   "Soudain, un cri mystérieux venant de la forêt les fit sursauter.", 
   "Armés de lampes de poche, ils décidèrent d'explorer les environs avec prudence.", 
@@ -61,27 +61,27 @@ const initialPhrases = [
   "Ils entendirent le murmure de l'eau avant même de voir les reflets argentés de la cascade.", 
   "Malgré l'obscurité, ils poursuivirent leur chemin en suivant les indications précises.", 
   "Au petit matin, après une nuit d'aventures, ils découvrirent le minerai scintillant sous les premiers rayons.", 
-  "Heureux de leur trouvaille, Julien et Louis promirent de revenir explorer davantag.", 
-  "Julien et Louis décidaient de construire une maquette d'avion avec Jules le weekend prochain.", 
+  "Heureux de leur trouvaille, Justin et Liam promirent de revenir explorer davantag.", 
+  "Justin et Liam décidaient de construire une maquette d'avion avec Mario le weekend prochain.", 
   "Ils passaient des heures à dessiner les plans, inspirés par les avions de chasse.", 
-  "En cherchant des matériaux, Julien trouva un vieux moteur dans le grenier de son grand-père.", 
-  "Louis proposait d'utiliser des feuilles d'aluminium pour faire les ailes de l'avion.", 
-  "Jules avait l'idée de peindre la maquette en rouge et noir, comme un vrai avion de combat.", 
+  "En cherchant des matériaux, Justin trouva un vieux moteur dans le grenier de son grand-père.", 
+  "Liam proposait d'utiliser des feuilles d'aluminium pour faire les ailes de l'avion.", 
+  "Mario avait l'idée de peindre la maquette en rouge et noir, comme un vrai avion de combat.", 
   "Ils travaillaient avec attention, veillant à ne pas laisser de colle sur la table.", 
   "Après plusieurs jours de travail, leur avion était prêt à être présenté à la foire scientifique.", 
   "Le jour de la foire, ils installaient leur stand et expliquaient le fonctionnement de l'avion aux visiteurs.", 
   "Ils gagnaient le premier prix pour la créativité et la qualité de leur travail.", 
   "Fiers de leur succès, ils rêvaient déjà à leur prochain projet de scienc.", 
-  "Un soir, Julien observait les étoiles en se demandant s'il y avait de la vie sur Mars.", 
-  "Louis lui avait prêté un livre sur les fusées et les voyages dans l'espace.", 
+  "Un soir, Justin observait les étoiles en se demandant s'il y avait de la vie sur Mars.", 
+  "Liam lui avait prêté un livre sur les fusées et les voyages dans l'espace.", 
   "Ils planifiaient de construire une maquette de fusée pour la lancer dans le jardin.", 
-  "Jules se joignait à eux avec des plans détaillés d'un lanceur spatial qu'il avait dessinés.", 
+  "Mario se joignait à eux avec des plans détaillés d'un lanceur spatial qu'il avait dessinés.", 
   "Ils collectaient des bouteilles en plastique, du carton et du ruban adhésif pour leur projet.", 
   "La construction de la fusée demandait de la précision et beaucoup de patience.", 
   "Une fois terminée, la fusée mesurait près d'un mètre de haut et semblait prête pour le décollage.", 
   "Ils choisissaient un jour ensoleillé pour le lancement et invitaient toute la classe à venir voir.", 
   "La fusée s'élevait dans le ciel, laissant une traînée de fumée, sous les applaudissements.", 
-  "Impressionnés par leur exploit, Julien et ses amis décidaient de visiter un musée de l'espace.", 
+  "Impressionnés par leur exploit, Justin et ses amis décidaient de visiter un musée de l'espace.", 
 ]
 
 export function App3(props: {}) {
@@ -357,7 +357,7 @@ function GuessComponent(props: { guess: Guess }) {
         const error = props.guess.errors.find(e => index >= e.offset && index < e.offset + e.length)
         const prevError = props.guess.errors.find(e => index - 1 >= e.offset && index - 1 < e.offset + e.length)
         const currentError = char.trim() ? error : prevError
-        
+
         return (
           <span
             style={{ 
