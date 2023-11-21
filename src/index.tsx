@@ -6,5 +6,12 @@ import { App } from './App'
 import { App2 } from './App2'
 import { App3 } from './App3'
 import { AppTest } from './AppTest'
+import { SessionEditorApp } from './SessionEditor'
 
-ReactDOM.render(<App3 />, document.getElementById('root'))
+// Open Session Editor if the URL hash is #edit
+if (window.location.hash === '#edit') {
+  ReactDOM.render(<SessionEditorApp />, document.getElementById('root'))
+}
+else {
+  ReactDOM.render(<App3 />, document.getElementById('root'))
+}

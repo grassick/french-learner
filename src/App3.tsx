@@ -26,11 +26,11 @@ if (!rapidAPIKey) {
   localStorage.setItem('rapidAPIKey', rapidAPIKey)
 }
 
-interface Session {
+export interface Session {
   puzzles: Puzzle[]
 }
 
-interface Puzzle {
+export interface Puzzle {
   /** Translate is written in English, dictate is in French */
   type: "translate" | "dictate"
   prompt: string
@@ -39,12 +39,12 @@ interface Puzzle {
   status: "pending" | "in-progress" | "complete" | "skipped"
 }
 
-interface Guess {
+export interface Guess {
   text: string
   errors: Error[]
 }
 
-interface Error {
+export interface Error {
   offset: number
   length: number
   type: "spelling" | "grammar"
