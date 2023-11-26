@@ -1087,7 +1087,7 @@ var require_react_development = __commonJS({
           }
           return dispatcher.useContext(Context);
         }
-        function useState3(initialState) {
+        function useState5(initialState) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useState(initialState);
         }
@@ -1095,11 +1095,11 @@ var require_react_development = __commonJS({
           var dispatcher = resolveDispatcher();
           return dispatcher.useReducer(reducer, initialArg, init);
         }
-        function useRef(initialValue) {
+        function useRef2(initialValue) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useRef(initialValue);
         }
-        function useEffect2(create, deps) {
+        function useEffect3(create, deps) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useEffect(create, deps);
         }
@@ -1107,11 +1107,11 @@ var require_react_development = __commonJS({
           var dispatcher = resolveDispatcher();
           return dispatcher.useInsertionEffect(create, deps);
         }
-        function useLayoutEffect(create, deps) {
+        function useLayoutEffect2(create, deps) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useLayoutEffect(create, deps);
         }
-        function useCallback(callback, deps) {
+        function useCallback2(callback, deps) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useCallback(callback, deps);
         }
@@ -1877,19 +1877,19 @@ var require_react_development = __commonJS({
         exports.memo = memo;
         exports.startTransition = startTransition;
         exports.unstable_act = act;
-        exports.useCallback = useCallback;
+        exports.useCallback = useCallback2;
         exports.useContext = useContext;
         exports.useDebugValue = useDebugValue;
         exports.useDeferredValue = useDeferredValue;
-        exports.useEffect = useEffect2;
+        exports.useEffect = useEffect3;
         exports.useId = useId;
         exports.useImperativeHandle = useImperativeHandle;
         exports.useInsertionEffect = useInsertionEffect;
-        exports.useLayoutEffect = useLayoutEffect;
+        exports.useLayoutEffect = useLayoutEffect2;
         exports.useMemo = useMemo;
         exports.useReducer = useReducer;
-        exports.useRef = useRef;
-        exports.useState = useState3;
+        exports.useRef = useRef2;
+        exports.useState = useState5;
         exports.useSyncExternalStore = useSyncExternalStore;
         exports.useTransition = useTransition;
         exports.version = ReactVersion;
@@ -2385,9 +2385,9 @@ var require_react_dom_development = __commonJS({
         if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== "undefined" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart === "function") {
           __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(new Error());
         }
-        var React4 = require_react();
+        var React6 = require_react();
         var Scheduler = require_scheduler();
-        var ReactSharedInternals = React4.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+        var ReactSharedInternals = React6.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
         var suppressWarning = false;
         function setSuppressWarning(newSuppressWarning) {
           {
@@ -3992,7 +3992,7 @@ var require_react_dom_development = __commonJS({
           {
             if (props.value == null) {
               if (typeof props.children === "object" && props.children !== null) {
-                React4.Children.forEach(props.children, function(child) {
+                React6.Children.forEach(props.children, function(child) {
                   if (child == null) {
                     return;
                   }
@@ -12439,7 +12439,7 @@ var require_react_dom_development = __commonJS({
           }
         }
         var fakeInternalInstance = {};
-        var emptyRefsObject = new React4.Component().refs;
+        var emptyRefsObject = new React6.Component().refs;
         var didWarnAboutStateAssignmentForComponent;
         var didWarnAboutUninitializedState;
         var didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate;
@@ -23480,8 +23480,11 @@ var require_react_dom = __commonJS({
 });
 
 // src/index.tsx
-var import_react3 = __toESM(require_react());
+var import_react6 = __toESM(require_react());
 var import_react_dom = __toESM(require_react_dom());
+
+// src/SessionEditor.tsx
+var import_react2 = __toESM(require_react());
 
 // src/App3.tsx
 var import_react = __toESM(require_react());
@@ -26546,6 +26549,155 @@ if (!rapidAPIKey) {
   }
   localStorage.setItem("rapidAPIKey", rapidAPIKey);
 }
+function usePersistedState(key, defaultValue) {
+  const [state, setState] = (0, import_react.useState)(() => {
+    const storedValue = window.localStorage.getItem(key);
+    return storedValue !== null ? JSON.parse(storedValue) : defaultValue;
+  });
+  (0, import_react.useEffect)(() => {
+    window.localStorage.setItem(key, JSON.stringify(state));
+  }, [key, state]);
+  return [state, setState];
+}
+
+// src/SessionEditor.tsx
+function SessionEditorApp(props) {
+  const [session, setSession] = usePersistedState("sessions3", {
+    puzzles: []
+  });
+  return /* @__PURE__ */ import_react2.default.createElement(SessionEditor, { session, setSession });
+}
+function SessionEditor({ session, setSession }) {
+  const [selectedPuzzleIndex, setSelectedPuzzleIndex] = (0, import_react2.useState)(null);
+  const [selectedGuessIndex, setSelectedGuessIndex] = (0, import_react2.useState)(null);
+  const [showModal, setShowModal] = (0, import_react2.useState)(false);
+  const [modalInput, setModalInput] = (0, import_react2.useState)("");
+  const selectedPuzzle = selectedPuzzleIndex !== null ? session.puzzles[selectedPuzzleIndex] : null;
+  const selectedGuess = selectedGuessIndex !== null && selectedPuzzle ? selectedPuzzle.guesses[selectedGuessIndex] : null;
+  const handlePuzzleChange = (index, puzzle) => {
+    const newPuzzles = [...session.puzzles];
+    newPuzzles[index] = puzzle;
+    setSession({ ...session, puzzles: newPuzzles });
+  };
+  const handleGuessChange = (puzzleIndex, guessIndex, guess) => {
+    const newPuzzles = [...session.puzzles];
+    newPuzzles[puzzleIndex].guesses[guessIndex] = guess;
+    setSession({ ...session, puzzles: newPuzzles });
+  };
+  const handleAddPuzzle = () => {
+    const newPuzzles = [...session.puzzles, { type: "translate", prompt: "", guesses: [], score: 0, status: "pending" }];
+    setSession({ ...session, puzzles: newPuzzles });
+  };
+  const handleRemovePuzzle = (index) => {
+    const newPuzzles = [...session.puzzles];
+    newPuzzles.splice(index, 1);
+    setSession({ ...session, puzzles: newPuzzles });
+  };
+  const handleAddGuess = (puzzleIndex) => {
+    const newPuzzles = [...session.puzzles];
+    newPuzzles[puzzleIndex].guesses.push({ text: "", errors: [] });
+    setSession({ ...session, puzzles: newPuzzles });
+  };
+  const handleRemoveGuess = (puzzleIndex, guessIndex) => {
+    const newPuzzles = [...session.puzzles];
+    newPuzzles[puzzleIndex].guesses.splice(guessIndex, 1);
+    setSession({ ...session, puzzles: newPuzzles });
+  };
+  const handleModalOk = () => {
+    const lines = modalInput.split("\n").filter((line) => line.trim() !== "");
+    const newPuzzles = lines.map((line) => ({ type: "dictate", prompt: line, guesses: [], score: 0, status: "pending" }));
+    setSession({ ...session, puzzles: [...session.puzzles, ...newPuzzles] });
+    setModalInput("");
+    setShowModal(false);
+  };
+  return /* @__PURE__ */ import_react2.default.createElement("div", { className: "container" }, /* @__PURE__ */ import_react2.default.createElement("h2", { className: "mb-3" }, "Session Editor"), /* @__PURE__ */ import_react2.default.createElement("button", { className: "btn btn-primary mb-3", onClick: () => setShowModal(true) }, "Add Puzzles from Text"), showModal && /* @__PURE__ */ import_react2.default.createElement("div", { className: "modal show", tabIndex: -1, style: { display: "block" } }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "modal-dialog" }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "modal-content" }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "modal-header" }, /* @__PURE__ */ import_react2.default.createElement("h5", { className: "modal-title" }, "Add Puzzles from Text"), /* @__PURE__ */ import_react2.default.createElement("button", { type: "button", className: "btn-close", onClick: () => setShowModal(false), "aria-label": "Close" })), /* @__PURE__ */ import_react2.default.createElement("div", { className: "modal-body" }, /* @__PURE__ */ import_react2.default.createElement("textarea", { className: "form-control", value: modalInput, onChange: (e) => setModalInput(e.target.value), rows: 10, style: { width: "100%" } })), /* @__PURE__ */ import_react2.default.createElement("div", { className: "modal-footer" }, /* @__PURE__ */ import_react2.default.createElement("button", { type: "button", className: "btn btn-secondary", onClick: () => setShowModal(false) }, "Close"), /* @__PURE__ */ import_react2.default.createElement("button", { type: "button", className: "btn btn-primary", onClick: handleModalOk }, "Save changes"))))), /* @__PURE__ */ import_react2.default.createElement("button", { className: "btn btn-primary mb-3", onClick: handleAddPuzzle }, "Add Puzzle"), session.puzzles.map((puzzle, index) => /* @__PURE__ */ import_react2.default.createElement("div", { key: index, className: "card mb-3" }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "card-header" }, /* @__PURE__ */ import_react2.default.createElement("h3", null, "Puzzle ", index + 1, ": ", puzzle.prompt, " (", puzzle.score ?? "", ")")), /* @__PURE__ */ import_react2.default.createElement("div", { className: "card-body" }, /* @__PURE__ */ import_react2.default.createElement("button", { className: "btn btn-danger me-2", onClick: () => handleRemovePuzzle(index) }, "Remove Puzzle"), /* @__PURE__ */ import_react2.default.createElement("button", { className: "btn btn-secondary", onClick: () => setSelectedPuzzleIndex(index) }, "Edit Puzzle"), selectedPuzzle && selectedPuzzleIndex === index && /* @__PURE__ */ import_react2.default.createElement(
+    PuzzleEditor,
+    {
+      puzzle: selectedPuzzle,
+      onChange: (puzzle2) => handlePuzzleChange(index, puzzle2),
+      onAddGuess: () => handleAddGuess(index),
+      onRemoveGuess: (guessIndex) => handleRemoveGuess(index, guessIndex),
+      onSelectGuess: (guessIndex) => setSelectedGuessIndex(guessIndex),
+      selectedGuessIndex
+    }
+  )))));
+}
+function PuzzleEditor({
+  puzzle,
+  onChange,
+  onAddGuess,
+  onRemoveGuess,
+  onSelectGuess,
+  selectedGuessIndex
+}) {
+  const handleFieldChange = (field, value) => {
+    onChange({ ...puzzle, [field]: value });
+  };
+  return /* @__PURE__ */ import_react2.default.createElement("div", { className: "container" }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "mb-3" }, /* @__PURE__ */ import_react2.default.createElement("label", { className: "form-label" }, "Type:"), /* @__PURE__ */ import_react2.default.createElement("input", { type: "text", className: "form-control", value: puzzle.type, onChange: (e) => handleFieldChange("type", e.target.value) })), /* @__PURE__ */ import_react2.default.createElement("div", { className: "mb-3" }, /* @__PURE__ */ import_react2.default.createElement("label", { className: "form-label" }, "Prompt:"), /* @__PURE__ */ import_react2.default.createElement("input", { type: "text", className: "form-control", value: puzzle.prompt, onChange: (e) => handleFieldChange("prompt", e.target.value) })), /* @__PURE__ */ import_react2.default.createElement("div", { className: "mb-3" }, /* @__PURE__ */ import_react2.default.createElement("label", { className: "form-label" }, "Score:"), /* @__PURE__ */ import_react2.default.createElement("input", { type: "number", className: "form-control", value: puzzle.score, onChange: (e) => handleFieldChange("score", Number(e.target.value)) })), /* @__PURE__ */ import_react2.default.createElement("div", { className: "mb-3" }, /* @__PURE__ */ import_react2.default.createElement("label", { className: "form-label" }, "Status:"), /* @__PURE__ */ import_react2.default.createElement("select", { className: "form-select", value: puzzle.status, onChange: (e) => handleFieldChange("status", e.target.value) }, /* @__PURE__ */ import_react2.default.createElement("option", { value: "pending" }, "Pending"), /* @__PURE__ */ import_react2.default.createElement("option", { value: "in-progress" }, "In Progress"), /* @__PURE__ */ import_react2.default.createElement("option", { value: "complete" }, "Complete"), /* @__PURE__ */ import_react2.default.createElement("option", { value: "skipped" }, "Skipped"))), /* @__PURE__ */ import_react2.default.createElement("button", { className: "btn btn-primary mb-3", onClick: onAddGuess }, "Add Guess"), puzzle.guesses.map((guess, index) => /* @__PURE__ */ import_react2.default.createElement("div", { key: index, className: "mb-3" }, /* @__PURE__ */ import_react2.default.createElement("p", null, guess.text), /* @__PURE__ */ import_react2.default.createElement("button", { className: "btn btn-danger me-2", onClick: () => onRemoveGuess(index) }, "Remove Guess"), /* @__PURE__ */ import_react2.default.createElement("button", { className: "btn btn-secondary", onClick: () => onSelectGuess(index) }, "Edit Guess"), selectedGuessIndex === index && /* @__PURE__ */ import_react2.default.createElement(GuessEditor, { guess, onChange: (guess2) => handleFieldChange("guesses", [...puzzle.guesses.slice(0, index), guess2, ...puzzle.guesses.slice(index + 1)]) }))));
+}
+function GuessEditor({ guess, onChange }) {
+  const handleFieldChange = (field, value) => {
+    onChange({ ...guess, [field]: value });
+  };
+  return /* @__PURE__ */ import_react2.default.createElement("div", null, /* @__PURE__ */ import_react2.default.createElement("label", null, "Text: ", /* @__PURE__ */ import_react2.default.createElement("input", { type: "text", value: guess.text, onChange: (e) => handleFieldChange("text", e.target.value) })));
+}
+
+// src/Misc.tsx
+var import_react3 = __toESM(require_react());
+function Misc(props) {
+  const [session, setSession] = usePersistedState("sessions3", {
+    puzzles: []
+  });
+  let text = "";
+  for (const puzzle of session.puzzles) {
+    if (puzzle.status === "complete") {
+      text += `Prompt: ${puzzle.prompt}
+`;
+      text += `Guess: ${puzzle.guesses[0].text}
+`;
+      text += "\n";
+    }
+  }
+  return /* @__PURE__ */ import_react3.default.createElement("div", null, /* @__PURE__ */ import_react3.default.createElement("div", { style: { whiteSpace: "pre" } }, text));
+}
+
+// src/App4.tsx
+var import_react5 = __toESM(require_react());
+
+// src/useStableCallback.ts
+var import_react4 = __toESM(require_react());
+function useStableCallback(callback) {
+  const callbackRef = (0, import_react4.useRef)(callback);
+  (0, import_react4.useLayoutEffect)(() => {
+    callbackRef.current = callback;
+  });
+  const wrappedCallback = function(...args) {
+    return callbackRef.current.apply(this, args);
+  };
+  return (0, import_react4.useCallback)(wrappedCallback, []);
+}
+
+// src/App4.tsx
+var openAIKey2 = localStorage.getItem("openAIKey");
+if (!openAIKey2) {
+  openAIKey2 = prompt("Please enter your OpenAI key");
+  if (!openAIKey2) {
+    throw new Error("No OpenAI key provided");
+  }
+  localStorage.setItem("openAIKey", openAIKey2);
+}
+var openai2 = new openai_default({
+  apiKey: openAIKey2,
+  dangerouslyAllowBrowser: true
+});
+var rapidAPIKey2 = localStorage.getItem("rapidAPIKey");
+if (!rapidAPIKey2) {
+  rapidAPIKey2 = prompt("Please enter your RapidAPI key");
+  if (!rapidAPIKey2) {
+    throw new Error("No RapidAPI key provided");
+  }
+  localStorage.setItem("rapidAPIKey", rapidAPIKey2);
+}
 var initialPhrases = [
   "Justin et Mario avaient pr\xE9par\xE9 leurs sacs \xE0 dos pour une aventure nocturne dans les bois.",
   "Le ciel \xE9toil\xE9 \xE9tait beau tandis qu'ils montaient leur tente pr\xE8s d'un vieux ch\xEAne.",
@@ -26578,8 +26730,8 @@ var initialPhrases = [
   "La fus\xE9e s'\xE9levait dans le ciel, laissant une tra\xEEn\xE9e de fum\xE9e, sous les applaudissements.",
   "Impressionn\xE9s par leur exploit, Justin et ses amis d\xE9cidaient de visiter un mus\xE9e de l'espace."
 ];
-function App3(props) {
-  const [session, setSession] = usePersistedState("sessions3", {
+function App4(props) {
+  const [session, setSession] = usePersistedState2("sessions3", {
     puzzles: initialPhrases.map((prompt2) => ({
       type: "dictate",
       prompt: prompt2,
@@ -26588,12 +26740,12 @@ function App3(props) {
       status: "pending"
     }))
   });
-  const [voice, setVoice] = (0, import_react.useState)("alloy");
+  const [voice, setVoice] = (0, import_react5.useState)("onyx");
   let lastDisplayedIndex = session.puzzles.findIndex((puzzle) => puzzle.status === "pending" || puzzle.status === "in-progress");
   if (lastDisplayedIndex === -1) {
     lastDisplayedIndex = session.puzzles.length - 1;
   }
-  return /* @__PURE__ */ import_react.default.createElement("div", { className: "container" }, /* @__PURE__ */ import_react.default.createElement("h2", { className: "text-center my-4" }, "Application d'entra\xEEnement au fran\xE7ais"), /* @__PURE__ */ import_react.default.createElement("div", { className: "sticky-top p-3 d-flex justify-content-between mb-3" }, /* @__PURE__ */ import_react.default.createElement("div", null, /* @__PURE__ */ import_react.default.createElement("h5", null, "Score Total : ", session.puzzles.reduce((total, puzzle) => total + puzzle.score, 0)), /* @__PURE__ */ import_react.default.createElement("h5", null, "Score Le Plus \xC9lev\xE9 : ", Math.max(...session.puzzles.map((puzzle) => puzzle.score)))), /* @__PURE__ */ import_react.default.createElement("div", null, /* @__PURE__ */ import_react.default.createElement("button", { className: "btn btn-secondary btn-sm", onClick: () => {
+  return /* @__PURE__ */ import_react5.default.createElement("div", { className: "container" }, /* @__PURE__ */ import_react5.default.createElement("h2", { className: "text-center my-4" }, "Application d'entra\xEEnement au fran\xE7ais"), /* @__PURE__ */ import_react5.default.createElement("div", { className: "sticky-top p-3 d-flex justify-content-between mb-3 bg-body" }, /* @__PURE__ */ import_react5.default.createElement("div", null, /* @__PURE__ */ import_react5.default.createElement("h5", null, "Score Total : ", session.puzzles.reduce((total, puzzle) => total + puzzle.score, 0)), /* @__PURE__ */ import_react5.default.createElement("h5", null, "Score Le Plus \xC9lev\xE9 : ", Math.max(...session.puzzles.map((puzzle) => puzzle.score)))), /* @__PURE__ */ import_react5.default.createElement("div", null, /* @__PURE__ */ import_react5.default.createElement("button", { className: "btn btn-secondary btn-sm", onClick: () => {
     const phrase = window.prompt("Enter a phrase");
     if (phrase) {
       setSession((prevState) => ({
@@ -26606,9 +26758,10 @@ function App3(props) {
         }]
       }));
     }
-  } }, "Ajouter une phrase"), /* @__PURE__ */ import_react.default.createElement("div", null, /* @__PURE__ */ import_react.default.createElement("select", { className: "form-select", value: voice, onChange: (e) => setVoice(e.target.value) }, /* @__PURE__ */ import_react.default.createElement("option", { value: "alloy" }, "Alloy"), /* @__PURE__ */ import_react.default.createElement("option", { value: "echo" }, "Echo"), /* @__PURE__ */ import_react.default.createElement("option", { value: "fable" }, "Fable"), /* @__PURE__ */ import_react.default.createElement("option", { value: "onyx" }, "Onyx"), /* @__PURE__ */ import_react.default.createElement("option", { value: "nova" }, "Nova"), /* @__PURE__ */ import_react.default.createElement("option", { value: "shimmer" }, "Shimmer"))))), session.puzzles.slice(0, lastDisplayedIndex + 1).map((puzzle, index) => /* @__PURE__ */ import_react.default.createElement(
+  } }, "Ajouter une phrase"), /* @__PURE__ */ import_react5.default.createElement("div", null, /* @__PURE__ */ import_react5.default.createElement("select", { className: "form-select", value: voice, onChange: (e) => setVoice(e.target.value) }, /* @__PURE__ */ import_react5.default.createElement("option", { value: "alloy" }, "Alloy"), /* @__PURE__ */ import_react5.default.createElement("option", { value: "echo" }, "Echo"), /* @__PURE__ */ import_react5.default.createElement("option", { value: "fable" }, "Fable"), /* @__PURE__ */ import_react5.default.createElement("option", { value: "onyx" }, "Onyx"), /* @__PURE__ */ import_react5.default.createElement("option", { value: "nova" }, "Nova"), /* @__PURE__ */ import_react5.default.createElement("option", { value: "shimmer" }, "Shimmer"))))), session.puzzles.slice(0, lastDisplayedIndex + 1).map((puzzle, index) => /* @__PURE__ */ import_react5.default.createElement(
     PuzzleComponent,
     {
+      allPuzzles: session.puzzles,
       puzzle,
       onPuzzleChange: (puzzle2) => {
         const puzzles = session.puzzles.slice();
@@ -26626,8 +26779,8 @@ function App3(props) {
 }
 function PuzzleComponent(props) {
   const { puzzle, onPuzzleChange } = props;
-  const [guess, setGuess] = (0, import_react.useState)(puzzle.guesses[puzzle.guesses.length - 1]?.text || "");
-  const [busy, setBusy] = (0, import_react.useState)(false);
+  const [guess, setGuess] = (0, import_react5.useState)(puzzle.guesses[puzzle.guesses.length - 1]?.text || "");
+  const [busy, setBusy] = (0, import_react5.useState)(false);
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
@@ -26643,7 +26796,7 @@ function PuzzleComponent(props) {
       method: "POST",
       headers: {
         "content-type": "application/x-www-form-urlencoded",
-        "X-RapidAPI-Key": rapidAPIKey,
+        "X-RapidAPI-Key": rapidAPIKey2,
         "X-RapidAPI-Host": "textgears-textgears-v1.p.rapidapi.com"
       },
       body: encodedParams
@@ -26660,6 +26813,7 @@ function PuzzleComponent(props) {
       }));
       const newPuzzle = {
         ...puzzle,
+        status: "in-progress",
         guesses: [
           ...puzzle.guesses,
           {
@@ -26680,6 +26834,9 @@ function PuzzleComponent(props) {
         }
         newPuzzle.score = score;
         setGuess("");
+        getFeedback().catch((err) => {
+          console.error(err);
+        });
       }
       onPuzzleChange(newPuzzle);
     }).catch((err) => {
@@ -26688,8 +26845,60 @@ function PuzzleComponent(props) {
       setBusy(false);
     });
   }
+  const updateFeedback = useStableCallback((feedback) => {
+    const newPuzzle = {
+      ...puzzle,
+      feedback
+    };
+    onPuzzleChange(newPuzzle);
+  });
+  async function getFeedback() {
+    const system = `You are a French tutor to a 10 year old francophone boy. Given his guess and the correct answers for dictation, you provide short, pithy advice in French if he made a mistake. If he got it right, congratulate him. 
+
+    Output should be the raw text of your output to him. Keep it brief and positive. He already figured out the correct answer in later guesses that are not shown to you. He already knows what wasn't correct, so don't repeat that.
+    
+    Give helpful general rules and tips, not correction of the specific words and ONLY if there is a general rule to learn from his mistake. He already wrote out the correct sentence, so don't tell him about spelling, unless there is a general rule of thumb to learn. The advice should be simple enough for a 10 year old to understand.
+    
+    Throw in a random cool science fact for fun as well. The fact should be suitable for someone who already has broad scientific knowledge. That is, include only obscure knowledge. Just add the fact, not any exclamations about how fascinating it is. Put the science fact in a new paragraph.
+
+    Everything should be 3 sentences at most.  Address him as "tu", not "vous"`;
+    const messages = [
+      {
+        role: "system",
+        content: system
+      }
+    ];
+    for (const puzzle2 of props.allPuzzles) {
+      if (puzzle2 == props.puzzle)
+        break;
+      if (puzzle2.status === "complete" && puzzle2.feedback) {
+        messages.push({
+          role: "user",
+          content: `Guess: ${puzzle2.guesses[0].text}
+Correct: ${puzzle2.prompt}`
+        });
+        messages.push({
+          role: "assistant",
+          content: puzzle2.feedback
+        });
+      }
+    }
+    messages.push({
+      role: "user",
+      content: `Guess: ${puzzle.guesses[0].text}
+Correct: ${puzzle.prompt}`
+    });
+    const completion = await openai2.chat.completions.create({
+      model: "gpt-4-1106-preview",
+      temperature: 1,
+      messages
+    });
+    const response = completion.choices[0].message?.content || "";
+    console.log(response);
+    updateFeedback(response);
+  }
   async function speak(text) {
-    const speech = await openai.audio.speech.create({
+    const speech = await openai2.audio.speech.create({
       model: "tts-1",
       voice: props.voice,
       input: text
@@ -26700,18 +26909,18 @@ function PuzzleComponent(props) {
   }
   function renderPrompt() {
     if (puzzle.type === "translate") {
-      return /* @__PURE__ */ import_react.default.createElement("div", { className: "text-muted", onDoubleClick: () => {
+      return /* @__PURE__ */ import_react5.default.createElement("div", { className: "text-muted", onDoubleClick: () => {
         if (window.confirm("Are you sure you want to delete this item?")) {
           props.onPuzzleDelete();
         }
-      } }, /* @__PURE__ */ import_react.default.createElement("span", { className: "text-muted" }, "Traduire: "), props.puzzle.prompt);
+      } }, /* @__PURE__ */ import_react5.default.createElement("span", { className: "text-muted" }, "Traduire: "), props.puzzle.prompt);
     } else if (puzzle.type === "dictate" && puzzle.status !== "complete") {
-      return /* @__PURE__ */ import_react.default.createElement("div", null, /* @__PURE__ */ import_react.default.createElement("button", { className: "btn btn-secondary", onClick: () => speak(props.puzzle.prompt) }, "Prononcer l'indice"));
+      return /* @__PURE__ */ import_react5.default.createElement("div", null, /* @__PURE__ */ import_react5.default.createElement("button", { className: "btn btn-secondary", onClick: () => speak(props.puzzle.prompt) }, "Prononcer l'indice"));
     } else {
       return null;
     }
   }
-  return /* @__PURE__ */ import_react.default.createElement("div", { className: "mt-4", style: { borderTop: "solid 1px #888", paddingTop: 20 } }, /* @__PURE__ */ import_react.default.createElement("h5", null, (props.puzzle.status === "in-progress" || props.puzzle.status == "pending") && /* @__PURE__ */ import_react.default.createElement("button", { style: { float: "right" }, className: "btn btn-link btn-sm", onClick: () => {
+  return /* @__PURE__ */ import_react5.default.createElement("div", { className: "mt-4", style: { borderTop: "solid 1px #888", paddingTop: 20 } }, /* @__PURE__ */ import_react5.default.createElement("h5", null, (props.puzzle.status === "in-progress" || props.puzzle.status == "pending") && /* @__PURE__ */ import_react5.default.createElement("button", { style: { float: "right" }, className: "btn btn-link btn-sm", onClick: () => {
     if (!window.confirm("Voulez-vous vraiment sauter cette \xE9nigme ?"))
       return;
     const newPuzzle = {
@@ -26719,19 +26928,19 @@ function PuzzleComponent(props) {
       status: "skipped"
     };
     onPuzzleChange(newPuzzle);
-  } }, "Sauter"), /* @__PURE__ */ import_react.default.createElement("span", { style: { float: "right" } }, props.puzzle.status === "complete" && /* @__PURE__ */ import_react.default.createElement("p", null, "Score : ", props.puzzle.score)), renderPrompt()), /* @__PURE__ */ import_react.default.createElement(GuessesComponent, { guesses: props.puzzle.guesses }), busy && /* @__PURE__ */ import_react.default.createElement("div", { className: "spinner-border text-secondary", role: "status" }, /* @__PURE__ */ import_react.default.createElement("span", { className: "visually-hidden" }, "Loading...")), props.puzzle.status !== "complete" && /* @__PURE__ */ import_react.default.createElement("div", { className: "input-group mb-3" }, /* @__PURE__ */ import_react.default.createElement("input", { type: "text", className: "form-control", placeholder: "Entrez votre supposition", value: guess, onChange: (e) => setGuess(e.target.value), onKeyDown: handleKeyDown, disabled: busy }), /* @__PURE__ */ import_react.default.createElement("button", { className: "btn btn-primary", type: "button", onClick: () => {
+  } }, "Sauter"), /* @__PURE__ */ import_react5.default.createElement("span", { style: { float: "right" } }, props.puzzle.status === "complete" && /* @__PURE__ */ import_react5.default.createElement("p", null, "Score : ", props.puzzle.score)), renderPrompt()), /* @__PURE__ */ import_react5.default.createElement(GuessesComponent, { guesses: props.puzzle.guesses }), busy && /* @__PURE__ */ import_react5.default.createElement("div", { className: "spinner-border text-secondary", role: "status" }, /* @__PURE__ */ import_react5.default.createElement("span", { className: "visually-hidden" }, "Loading...")), props.puzzle.status === "complete" && /* @__PURE__ */ import_react5.default.createElement("div", { className: "mb-3" }, /* @__PURE__ */ import_react5.default.createElement("button", { className: "btn btn-secondary", onClick: () => getFeedback() }, "Obtenir des commentaires")), props.puzzle.feedback && /* @__PURE__ */ import_react5.default.createElement("div", { className: "mb-3" }, /* @__PURE__ */ import_react5.default.createElement("div", { style: { whiteSpace: "pre-wrap", fontStyle: "italic" } }, props.puzzle.feedback)), props.puzzle.status !== "complete" && /* @__PURE__ */ import_react5.default.createElement("div", { className: "input-group mb-3" }, /* @__PURE__ */ import_react5.default.createElement("input", { type: "text", className: "form-control", placeholder: "Entrez votre supposition", value: guess, onChange: (e) => setGuess(e.target.value), onKeyDown: handleKeyDown, disabled: busy }), /* @__PURE__ */ import_react5.default.createElement("button", { className: "btn btn-primary", type: "button", onClick: () => {
     correctGuess();
   }, disabled: busy }, "Deviner")));
 }
 function GuessesComponent(props) {
-  return /* @__PURE__ */ import_react.default.createElement("div", null, props.guesses.map((guess) => /* @__PURE__ */ import_react.default.createElement(GuessComponent, { guess })));
+  return /* @__PURE__ */ import_react5.default.createElement("div", null, props.guesses.map((guess) => /* @__PURE__ */ import_react5.default.createElement(GuessComponent, { guess })));
 }
 function GuessComponent(props) {
-  return /* @__PURE__ */ import_react.default.createElement("div", { style: { fontSize: 18, margin: 15, lineHeight: 2 } }, props.guess.text.split("").map((char, index) => {
+  return /* @__PURE__ */ import_react5.default.createElement("div", { style: { fontSize: 18, margin: 15, lineHeight: 2 } }, props.guess.text.split("").map((char, index) => {
     const error = props.guess.errors.find((e) => index >= e.offset && index < e.offset + e.length);
     const prevError = props.guess.errors.find((e) => index - 1 >= e.offset && index - 1 < e.offset + e.length);
     const currentError = char.trim() ? error : prevError;
-    return /* @__PURE__ */ import_react.default.createElement(
+    return /* @__PURE__ */ import_react5.default.createElement(
       "span",
       {
         style: {
@@ -26752,96 +26961,24 @@ function GuessComponent(props) {
     );
   }));
 }
-function usePersistedState(key, defaultValue) {
-  const [state, setState] = (0, import_react.useState)(() => {
+function usePersistedState2(key, defaultValue) {
+  const [state, setState] = (0, import_react5.useState)(() => {
     const storedValue = window.localStorage.getItem(key);
     return storedValue !== null ? JSON.parse(storedValue) : defaultValue;
   });
-  (0, import_react.useEffect)(() => {
+  (0, import_react5.useEffect)(() => {
     window.localStorage.setItem(key, JSON.stringify(state));
   }, [key, state]);
   return [state, setState];
 }
 
-// src/SessionEditor.tsx
-var import_react2 = __toESM(require_react());
-function SessionEditorApp(props) {
-  const [session, setSession] = usePersistedState("sessions3", {
-    puzzles: []
-  });
-  return /* @__PURE__ */ import_react2.default.createElement(SessionEditor, { session, setSession });
-}
-function SessionEditor({ session, setSession }) {
-  const [selectedPuzzleIndex, setSelectedPuzzleIndex] = (0, import_react2.useState)(null);
-  const [selectedGuessIndex, setSelectedGuessIndex] = (0, import_react2.useState)(null);
-  const selectedPuzzle = selectedPuzzleIndex !== null ? session.puzzles[selectedPuzzleIndex] : null;
-  const selectedGuess = selectedGuessIndex !== null && selectedPuzzle ? selectedPuzzle.guesses[selectedGuessIndex] : null;
-  const handlePuzzleChange = (index, puzzle) => {
-    const newPuzzles = [...session.puzzles];
-    newPuzzles[index] = puzzle;
-    setSession({ ...session, puzzles: newPuzzles });
-  };
-  const handleGuessChange = (puzzleIndex, guessIndex, guess) => {
-    const newPuzzles = [...session.puzzles];
-    newPuzzles[puzzleIndex].guesses[guessIndex] = guess;
-    setSession({ ...session, puzzles: newPuzzles });
-  };
-  const handleAddPuzzle = () => {
-    const newPuzzles = [...session.puzzles, { type: "translate", prompt: "", guesses: [], score: 0, status: "pending" }];
-    setSession({ ...session, puzzles: newPuzzles });
-  };
-  const handleRemovePuzzle = (index) => {
-    const newPuzzles = [...session.puzzles];
-    newPuzzles.splice(index, 1);
-    setSession({ ...session, puzzles: newPuzzles });
-  };
-  const handleAddGuess = (puzzleIndex) => {
-    const newPuzzles = [...session.puzzles];
-    newPuzzles[puzzleIndex].guesses.push({ text: "", errors: [] });
-    setSession({ ...session, puzzles: newPuzzles });
-  };
-  const handleRemoveGuess = (puzzleIndex, guessIndex) => {
-    const newPuzzles = [...session.puzzles];
-    newPuzzles[puzzleIndex].guesses.splice(guessIndex, 1);
-    setSession({ ...session, puzzles: newPuzzles });
-  };
-  return /* @__PURE__ */ import_react2.default.createElement("div", { className: "container" }, /* @__PURE__ */ import_react2.default.createElement("h2", { className: "mb-3" }, "Session Editor"), /* @__PURE__ */ import_react2.default.createElement("button", { className: "btn btn-primary mb-3", onClick: handleAddPuzzle }, "Add Puzzle"), session.puzzles.map((puzzle, index) => /* @__PURE__ */ import_react2.default.createElement("div", { key: index, className: "card mb-3" }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "card-header" }, /* @__PURE__ */ import_react2.default.createElement("h3", null, "Puzzle ", index + 1, ": ", puzzle.prompt, " (", puzzle.score ?? "", ")")), /* @__PURE__ */ import_react2.default.createElement("div", { className: "card-body" }, /* @__PURE__ */ import_react2.default.createElement("button", { className: "btn btn-danger me-2", onClick: () => handleRemovePuzzle(index) }, "Remove Puzzle"), /* @__PURE__ */ import_react2.default.createElement("button", { className: "btn btn-secondary", onClick: () => setSelectedPuzzleIndex(index) }, "Edit Puzzle"), selectedPuzzle && selectedPuzzleIndex === index && /* @__PURE__ */ import_react2.default.createElement(
-    PuzzleEditor,
-    {
-      puzzle: selectedPuzzle,
-      onChange: (puzzle2) => handlePuzzleChange(index, puzzle2),
-      onAddGuess: () => handleAddGuess(index),
-      onRemoveGuess: (guessIndex) => handleRemoveGuess(index, guessIndex),
-      onSelectGuess: (guessIndex) => setSelectedGuessIndex(guessIndex),
-      selectedGuessIndex
-    }
-  )))));
-}
-function PuzzleEditor({
-  puzzle,
-  onChange,
-  onAddGuess,
-  onRemoveGuess,
-  onSelectGuess,
-  selectedGuessIndex
-}) {
-  const handleFieldChange = (field, value) => {
-    onChange({ ...puzzle, [field]: value });
-  };
-  return /* @__PURE__ */ import_react2.default.createElement("div", { className: "container" }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "mb-3" }, /* @__PURE__ */ import_react2.default.createElement("label", { className: "form-label" }, "Type:"), /* @__PURE__ */ import_react2.default.createElement("input", { type: "text", className: "form-control", value: puzzle.type, onChange: (e) => handleFieldChange("type", e.target.value) })), /* @__PURE__ */ import_react2.default.createElement("div", { className: "mb-3" }, /* @__PURE__ */ import_react2.default.createElement("label", { className: "form-label" }, "Prompt:"), /* @__PURE__ */ import_react2.default.createElement("input", { type: "text", className: "form-control", value: puzzle.prompt, onChange: (e) => handleFieldChange("prompt", e.target.value) })), /* @__PURE__ */ import_react2.default.createElement("div", { className: "mb-3" }, /* @__PURE__ */ import_react2.default.createElement("label", { className: "form-label" }, "Score:"), /* @__PURE__ */ import_react2.default.createElement("input", { type: "number", className: "form-control", value: puzzle.score, onChange: (e) => handleFieldChange("score", Number(e.target.value)) })), /* @__PURE__ */ import_react2.default.createElement("div", { className: "mb-3" }, /* @__PURE__ */ import_react2.default.createElement("label", { className: "form-label" }, "Status:"), /* @__PURE__ */ import_react2.default.createElement("select", { className: "form-select", value: puzzle.status, onChange: (e) => handleFieldChange("status", e.target.value) }, /* @__PURE__ */ import_react2.default.createElement("option", { value: "pending" }, "Pending"), /* @__PURE__ */ import_react2.default.createElement("option", { value: "in-progress" }, "In Progress"), /* @__PURE__ */ import_react2.default.createElement("option", { value: "complete" }, "Complete"), /* @__PURE__ */ import_react2.default.createElement("option", { value: "skipped" }, "Skipped"))), /* @__PURE__ */ import_react2.default.createElement("button", { className: "btn btn-primary mb-3", onClick: onAddGuess }, "Add Guess"), puzzle.guesses.map((guess, index) => /* @__PURE__ */ import_react2.default.createElement("div", { key: index, className: "mb-3" }, /* @__PURE__ */ import_react2.default.createElement("p", null, guess.text), /* @__PURE__ */ import_react2.default.createElement("button", { className: "btn btn-danger me-2", onClick: () => onRemoveGuess(index) }, "Remove Guess"), /* @__PURE__ */ import_react2.default.createElement("button", { className: "btn btn-secondary", onClick: () => onSelectGuess(index) }, "Edit Guess"), selectedGuessIndex === index && /* @__PURE__ */ import_react2.default.createElement(GuessEditor, { guess, onChange: (guess2) => handleFieldChange("guesses", [...puzzle.guesses.slice(0, index), guess2, ...puzzle.guesses.slice(index + 1)]) }))));
-}
-function GuessEditor({ guess, onChange }) {
-  const handleFieldChange = (field, value) => {
-    onChange({ ...guess, [field]: value });
-  };
-  return /* @__PURE__ */ import_react2.default.createElement("div", null, /* @__PURE__ */ import_react2.default.createElement("label", null, "Text: ", /* @__PURE__ */ import_react2.default.createElement("input", { type: "text", value: guess.text, onChange: (e) => handleFieldChange("text", e.target.value) })));
-}
-
 // src/index.tsx
 if (window.location.hash === "#edit") {
-  import_react_dom.default.render(/* @__PURE__ */ import_react3.default.createElement(SessionEditorApp, null), document.getElementById("root"));
+  import_react_dom.default.render(/* @__PURE__ */ import_react6.default.createElement(SessionEditorApp, null), document.getElementById("root"));
+} else if (window.location.hash === "#misc") {
+  import_react_dom.default.render(/* @__PURE__ */ import_react6.default.createElement(Misc, null), document.getElementById("root"));
 } else {
-  import_react_dom.default.render(/* @__PURE__ */ import_react3.default.createElement(App3, null), document.getElementById("root"));
+  import_react_dom.default.render(/* @__PURE__ */ import_react6.default.createElement(App4, null), document.getElementById("root"));
 }
 /*! Bundled license information:
 

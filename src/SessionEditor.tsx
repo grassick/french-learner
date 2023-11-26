@@ -14,6 +14,8 @@ export function SessionEditorApp(props: {}) {
 function SessionEditor({ session, setSession }: { session: Session, setSession: (session: Session) => void }) {
   const [selectedPuzzleIndex, setSelectedPuzzleIndex] = useState<number | null>(null);
   const [selectedGuessIndex, setSelectedGuessIndex] = useState<number | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [modalInput, setModalInput] = useState('');
 
   const selectedPuzzle = selectedPuzzleIndex !== null ? session.puzzles[selectedPuzzleIndex] : null;
   const selectedGuess = selectedGuessIndex !== null && selectedPuzzle ? selectedPuzzle.guesses[selectedGuessIndex] : null;
@@ -53,9 +55,37 @@ function SessionEditor({ session, setSession }: { session: Session, setSession: 
     setSession({ ...session, puzzles: newPuzzles });
   };
 
+  const handleModalOk = () => {
+    const lines = modalInput.split('\n').filter(line => line.trim() !== '');
+    const newPuzzles = lines.map(line => ({ type: "dictate", prompt: line, guesses: [], score: 0, status: 'pending' } as Puzzle));
+    setSession({ ...session, puzzles: [...session.puzzles, ...newPuzzles] });
+    setModalInput('');
+    setShowModal(false);
+  };
+
   return (
     <div className="container">
       <h2 className="mb-3">Session Editor</h2>
+      <button className="btn btn-primary mb-3" onClick={() => setShowModal(true)}>Add Puzzles from Text</button>
+      {showModal && (
+        <div className="modal show" tabIndex={-1} style={{display: "block"}}>
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Add Puzzles from Text</h5>
+                <button type="button" className="btn-close" onClick={() => setShowModal(false)} aria-label="Close"></button>
+              </div>
+              <div className="modal-body">
+                <textarea className="form-control" value={modalInput} onChange={(e) => setModalInput(e.target.value)} rows={10} style={{width: '100%'}} />
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Close</button>
+                <button type="button" className="btn btn-primary" onClick={handleModalOk}>Save changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       <button className="btn btn-primary mb-3" onClick={handleAddPuzzle}>Add Puzzle</button>
       {session.puzzles.map((puzzle, index) => (
         <div key={index} className="card mb-3">

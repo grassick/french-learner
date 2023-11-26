@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
 import OpenAI from 'openai';
+import { useStableCallback } from "./useStableCallback";
 
 let openAIKey = localStorage.getItem('openAIKey')
 
@@ -37,6 +38,7 @@ export interface Puzzle {
   guesses: Guess[]
   score: number
   status: "pending" | "in-progress" | "complete" | "skipped"
+  feedback?: string
 }
 
 export interface Guess {
@@ -52,39 +54,39 @@ export interface Error {
 }
 
 const initialPhrases = [
-  "Justin et Mario avaient préparé leurs sacs à dos pour une aventure nocturne dans les bois.", 
-  "Le ciel étoilé était beau tandis qu'ils montaient leur tente près d'un vieux chêne.", 
-  "Soudain, un cri mystérieux venant de la forêt les fit sursauter.", 
-  "Armés de lampes de poche, ils décidèrent d'explorer les environs avec prudence.", 
-  "Ils trouvèrent une carte ancienne cachée sous une pierre luminescente.", 
-  "La carte indiquait l'emplacement d'un minerai rare à côté d'une cascade oubliée.", 
-  "Ils entendirent le murmure de l'eau avant même de voir les reflets argentés de la cascade.", 
-  "Malgré l'obscurité, ils poursuivirent leur chemin en suivant les indications précises.", 
-  "Au petit matin, après une nuit d'aventures, ils découvrirent le minerai scintillant sous les premiers rayons.", 
-  "Heureux de leur trouvaille, Justin et Liam promirent de revenir explorer davantag.", 
-  "Justin et Liam décidaient de construire une maquette d'avion avec Mario le weekend prochain.", 
-  "Ils passaient des heures à dessiner les plans, inspirés par les avions de chasse.", 
-  "En cherchant des matériaux, Justin trouva un vieux moteur dans le grenier de son grand-père.", 
-  "Liam proposait d'utiliser des feuilles d'aluminium pour faire les ailes de l'avion.", 
-  "Mario avait l'idée de peindre la maquette en rouge et noir, comme un vrai avion de combat.", 
-  "Ils travaillaient avec attention, veillant à ne pas laisser de colle sur la table.", 
-  "Après plusieurs jours de travail, leur avion était prêt à être présenté à la foire scientifique.", 
-  "Le jour de la foire, ils installaient leur stand et expliquaient le fonctionnement de l'avion aux visiteurs.", 
-  "Ils gagnaient le premier prix pour la créativité et la qualité de leur travail.", 
-  "Fiers de leur succès, ils rêvaient déjà à leur prochain projet de scienc.", 
-  "Un soir, Justin observait les étoiles en se demandant s'il y avait de la vie sur Mars.", 
-  "Liam lui avait prêté un livre sur les fusées et les voyages dans l'espace.", 
-  "Ils planifiaient de construire une maquette de fusée pour la lancer dans le jardin.", 
-  "Mario se joignait à eux avec des plans détaillés d'un lanceur spatial qu'il avait dessinés.", 
-  "Ils collectaient des bouteilles en plastique, du carton et du ruban adhésif pour leur projet.", 
-  "La construction de la fusée demandait de la précision et beaucoup de patience.", 
-  "Une fois terminée, la fusée mesurait près d'un mètre de haut et semblait prête pour le décollage.", 
-  "Ils choisissaient un jour ensoleillé pour le lancement et invitaient toute la classe à venir voir.", 
-  "La fusée s'élevait dans le ciel, laissant une traînée de fumée, sous les applaudissements.", 
-  "Impressionnés par leur exploit, Justin et ses amis décidaient de visiter un musée de l'espace.", 
+  "Justin et Mario avaient préparé leurs sacs à dos pour une aventure nocturne dans les bois.",
+  "Le ciel étoilé était beau tandis qu'ils montaient leur tente près d'un vieux chêne.",
+  "Soudain, un cri mystérieux venant de la forêt les fit sursauter.",
+  "Armés de lampes de poche, ils décidèrent d'explorer les environs avec prudence.",
+  "Ils trouvèrent une carte ancienne cachée sous une pierre luminescente.",
+  "La carte indiquait l'emplacement d'un minerai rare à côté d'une cascade oubliée.",
+  "Ils entendirent le murmure de l'eau avant même de voir les reflets argentés de la cascade.",
+  "Malgré l'obscurité, ils poursuivirent leur chemin en suivant les indications précises.",
+  "Au petit matin, après une nuit d'aventures, ils découvrirent le minerai scintillant sous les premiers rayons.",
+  "Heureux de leur trouvaille, Justin et Liam promirent de revenir explorer davantag.",
+  "Justin et Liam décidaient de construire une maquette d'avion avec Mario le weekend prochain.",
+  "Ils passaient des heures à dessiner les plans, inspirés par les avions de chasse.",
+  "En cherchant des matériaux, Justin trouva un vieux moteur dans le grenier de son grand-père.",
+  "Liam proposait d'utiliser des feuilles d'aluminium pour faire les ailes de l'avion.",
+  "Mario avait l'idée de peindre la maquette en rouge et noir, comme un vrai avion de combat.",
+  "Ils travaillaient avec attention, veillant à ne pas laisser de colle sur la table.",
+  "Après plusieurs jours de travail, leur avion était prêt à être présenté à la foire scientifique.",
+  "Le jour de la foire, ils installaient leur stand et expliquaient le fonctionnement de l'avion aux visiteurs.",
+  "Ils gagnaient le premier prix pour la créativité et la qualité de leur travail.",
+  "Fiers de leur succès, ils rêvaient déjà à leur prochain projet de scienc.",
+  "Un soir, Justin observait les étoiles en se demandant s'il y avait de la vie sur Mars.",
+  "Liam lui avait prêté un livre sur les fusées et les voyages dans l'espace.",
+  "Ils planifiaient de construire une maquette de fusée pour la lancer dans le jardin.",
+  "Mario se joignait à eux avec des plans détaillés d'un lanceur spatial qu'il avait dessinés.",
+  "Ils collectaient des bouteilles en plastique, du carton et du ruban adhésif pour leur projet.",
+  "La construction de la fusée demandait de la précision et beaucoup de patience.",
+  "Une fois terminée, la fusée mesurait près d'un mètre de haut et semblait prête pour le décollage.",
+  "Ils choisissaient un jour ensoleillé pour le lancement et invitaient toute la classe à venir voir.",
+  "La fusée s'élevait dans le ciel, laissant une traînée de fumée, sous les applaudissements.",
+  "Impressionnés par leur exploit, Justin et ses amis décidaient de visiter un musée de l'espace.",
 ]
 
-export function App3(props: {}) {
+export function App4(props: {}) {
   const [session, setSession] = usePersistedState<Session>("sessions3", {
     puzzles: initialPhrases.map(prompt => ({
       type: "dictate",
@@ -143,6 +145,7 @@ export function App3(props: {}) {
         .slice(0, lastDisplayedIndex + 1)
         .map((puzzle, index) => (
           <PuzzleComponent
+            allPuzzles={session.puzzles}
             puzzle={puzzle}
             onPuzzleChange={puzzle => {
               const puzzles = session.puzzles.slice()
@@ -177,6 +180,7 @@ export function App3(props: {}) {
 }
 
 function PuzzleComponent(props: {
+  allPuzzles: Puzzle[]
   puzzle: Puzzle
   onPuzzleChange: (puzzle: Puzzle) => void
   onPuzzleDelete: () => void
@@ -226,6 +230,7 @@ function PuzzleComponent(props: {
       // Update the puzzle
       const newPuzzle: Puzzle = {
         ...puzzle,
+        status: "in-progress",
         guesses: [
           ...puzzle.guesses,
           {
@@ -249,6 +254,9 @@ function PuzzleComponent(props: {
         }
         newPuzzle.score = score
         setGuess("")
+        getFeedback().catch(err => {
+          console.error(err)
+        })
       }
 
       onPuzzleChange(newPuzzle)
@@ -260,11 +268,74 @@ function PuzzleComponent(props: {
     })
   }
 
+  const updateFeedback = useStableCallback((feedback: string) => {
+    const newPuzzle: Puzzle = {
+      ...puzzle,
+      feedback
+    }
+    onPuzzleChange(newPuzzle)
+  })
+
+  async function getFeedback() {
+    const system = `You are a French tutor to a 10 year old francophone boy. Given his guess and the correct answers for dictation, you provide short, pithy advice in French if he made a mistake. If he got it right, congratulate him. 
+
+    Output should be the raw text of your output to him. Keep it brief and positive. He already figured out the correct answer in later guesses that are not shown to you. He already knows what wasn't correct, so don't repeat that.
+    
+    Give helpful general rules and tips, not correction of the specific words and ONLY if there is a general rule to learn from his mistake. He already wrote out the correct sentence, so don't tell him about spelling, unless there is a general rule of thumb to learn. The advice should be simple enough for a 10 year old to understand.
+    
+    Throw in a random cool science fact for fun as well. The fact should be suitable for someone who already has broad scientific knowledge. That is, include only obscure knowledge. Just add the fact, not any exclamations about how fascinating it is. Put the science fact in a new paragraph.
+
+    Everything should be 3 sentences at most.  Address him as "tu", not "vous"`
+
+    // Create messages
+    const messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
+      {
+        role: "system",
+        content: system,
+      },
+    ]
+
+    for (const puzzle of props.allPuzzles) {
+      if (puzzle == props.puzzle) break
+
+      if (puzzle.status === "complete" && puzzle.feedback) {
+        messages.push({
+          role: "user",
+          content: `Guess: ${puzzle.guesses[0].text}\nCorrect: ${puzzle.prompt}`
+        })
+        messages.push({
+          role: "assistant",
+          content: puzzle.feedback
+        })
+      }
+    }
+
+    messages.push({
+      role: "user",
+      content: `Guess: ${puzzle.guesses[0].text}\nCorrect: ${puzzle.prompt}`
+    })
+
+    // Call OpenAI
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4-1106-preview",
+      temperature: 1,
+      messages: messages,
+    })
+
+
+    // Get response
+    const response = completion.choices[0].message?.content || ""
+
+    console.log(response)
+
+    updateFeedback(response)
+  }
+
   async function speak(text: string) {
     const speech = await openai.audio.speech.create({
       model: "tts-1",
       voice: props.voice,
-      input: text,   
+      input: text,
     })
 
     console.log(speech)
@@ -281,8 +352,8 @@ function PuzzleComponent(props: {
           props.onPuzzleDelete()
         }
       }}>
-      <span className="text-muted">Traduire: </span>{props.puzzle.prompt}
-    </div>
+        <span className="text-muted">Traduire: </span>{props.puzzle.prompt}
+      </div>
     }
     else if (puzzle.type === "dictate" && puzzle.status !== "complete") {
       return (
@@ -301,10 +372,10 @@ function PuzzleComponent(props: {
   return (
     <div className="mt-4" style={{ borderTop: "solid 1px #888", paddingTop: 20 }}>
       <h5>
-      {(props.puzzle.status === "in-progress" || props.puzzle.status == "pending") && 
-          <button style={{ float: "right"}} className="btn btn-link btn-sm" onClick={() => {
+        {(props.puzzle.status === "in-progress" || props.puzzle.status == "pending") &&
+          <button style={{ float: "right" }} className="btn btn-link btn-sm" onClick={() => {
             if (!window.confirm('Voulez-vous vraiment sauter cette énigme ?')) return
-            
+
             const newPuzzle: Puzzle = {
               ...puzzle,
               status: "skipped"
@@ -325,6 +396,22 @@ function PuzzleComponent(props: {
       {busy &&
         <div className="spinner-border text-secondary" role="status">
           <span className="visually-hidden">Loading...</span>
+        </div>
+      }
+
+      {props.puzzle.status === "complete" &&
+        <div className="mb-3">
+          <button className="btn btn-secondary" onClick={() => getFeedback()}>
+            Obtenir des commentaires
+          </button>
+        </div>
+      }
+
+      {props.puzzle.feedback &&
+        <div className="mb-3">
+          <div style={{whiteSpace: "pre-wrap", fontStyle: "italic"}}>
+            {props.puzzle.feedback}
+          </div>
         </div>
       }
 
@@ -360,9 +447,9 @@ function GuessComponent(props: { guess: Guess }) {
 
         return (
           <span
-            style={{ 
-//            backgroundColor: error ? '#ff000060' : '#00ff0060', 
-              backgroundColor: currentError ? undefined : '#00ff0060', 
+            style={{
+              //            backgroundColor: error ? '#ff000060' : '#00ff0060', 
+              backgroundColor: currentError ? undefined : '#00ff0060',
               padding: index === 0 ? "5px 0px 5px 5px" : index === props.guess.text.length - 1 ? "5px 5px 5px 0px" : "5px 0px",
               userSelect: 'none'
             }}
