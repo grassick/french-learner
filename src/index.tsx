@@ -9,6 +9,7 @@ import { AppTest } from './AppTest'
 import { SessionEditorApp } from './SessionEditor'
 import { Misc } from './Misc'
 import { App4 } from './App4'
+import { App5 } from './App5'
 
 // Open Session Editor if the URL hash is #edit
 if (window.location.hash === '#edit') {
@@ -18,5 +19,5 @@ else if (window.location.hash === '#misc') {
   ReactDOM.render(<Misc />, document.getElementById('root'))
 }
 else {
-  ReactDOM.render(<App4 />, document.getElementById('root'))
+  ReactDOM.render(<App5 />, document.getElementById('root'))
 }
