@@ -399,7 +399,7 @@ function PuzzleComponent(props: {
         </div>
       }
 
-      {props.puzzle.status === "complete" &&
+      {props.puzzle.status === "complete" && !props.puzzle.feedback &&
         <div className="mb-3">
           <button className="btn btn-secondary" onClick={() => getFeedback()}>
             Obtenir des commentaires
