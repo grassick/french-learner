@@ -193,6 +193,8 @@ function PuzzleComponent(props: {
 
   const [busy, setBusy] = useState(false)
 
+  const [speaking, setSpeaking] = useState(false)
+
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault()
@@ -274,13 +276,16 @@ function PuzzleComponent(props: {
   })
 
   async function getFeedback() {
+    // Randomly choose true or false that is about 30% true
+    const trueOrFalse = Math.random() < 0.3 ? "true" : "false"
+
     const system = `You are a French tutor to a 10 year old francophone boy. Given his guess and the correct answers for dictation, you provide short, pithy advice in French if he made a mistake. If he got it right, congratulate him. 
 
     Output should be the raw text of your output to him. Keep it brief and positive. He already figured out the correct answer in later guesses that are not shown to you. He already knows what wasn't correct, so don't repeat that.
     
     Give helpful general rules and tips, not correction of the specific words and ONLY if there is a general rule to learn from his mistake. He already wrote out the correct sentence, so don't tell him about spelling, unless there is a general rule of thumb to learn. The advice should be simple enough for a 10 year old to understand.
     
-    Throw in a random cool science fact for fun as well. The fact should be suitable for someone who already has broad scientific knowledge. That is, include only obscure knowledge. Just add the fact, not any exclamations about how fascinating it is. Put the science fact in a new paragraph.
+    ${trueOrFalse ? "Throw in a random cool science fact for fun as well. The fact should be suitable for someone who already has broad scientific knowledge. That is, include only obscure knowledge. Just add the fact, not any exclamations about how fascinating it is. Put the science fact in a new paragraph." : ""}
 
     Everything should be 3 sentences at most.  Address him as "tu", not "vous"`
 
@@ -329,15 +334,21 @@ function PuzzleComponent(props: {
   }
 
   async function speak(text: string) {
-    const speech = await openai.audio.speech.create({
-      model: "tts-1",
-      voice: props.voice,
-      input: text,
-    })
+    try {
+      setSpeaking(true)
+      const speech = await openai.audio.speech.create({
+        model: "tts-1",
+        voice: props.voice,
+        input: text,
+      })
 
-    console.log(speech)
-    let audio = new Audio(URL.createObjectURL(await speech.blob()))
-    audio.play()
+      console.log(speech)
+      let audio = new Audio(URL.createObjectURL(await speech.blob()))
+      await audio.play()
+    }
+    finally {
+      setSpeaking(false)
+    }
   }
 
 
@@ -355,7 +366,7 @@ function PuzzleComponent(props: {
     else if (puzzle.type === "dictate" && puzzle.status !== "complete") {
       return (
         <div>
-          <button className="btn btn-secondary" onClick={() => speak(props.puzzle.prompt)}>
+          <button className="btn btn-secondary" onClick={() => speak(props.puzzle.prompt)} disabled={speaking}>
             Prononcer l'indice
           </button>
         </div>
@@ -396,13 +407,13 @@ function PuzzleComponent(props: {
         </div>
       }
 
-      {props.puzzle.status === "complete" && !props.puzzle.feedback &&
+      {/* {props.puzzle.status === "complete" && !props.puzzle.feedback &&
         <div className="mb-3">
           <button className="btn btn-secondary" onClick={() => getFeedback()}>
             Obtenir des commentaires
           </button>
         </div>
-      }
+      } */}
 
       {props.puzzle.feedback &&
         <div className="mb-3">
