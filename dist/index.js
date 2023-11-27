@@ -27197,7 +27197,7 @@ function PuzzleComponent(props) {
     
     Give helpful general rules and tips, not correction of the specific words and ONLY if there is a general rule to learn from his mistake. He already wrote out the correct sentence, so don't tell him about spelling, unless there is a general rule of thumb to learn. The advice should be simple enough for a 10 year old to understand.
     
-    ${trueOrFalse ? "Throw in a random cool science fact for fun as well. The fact should be suitable for someone who already has broad scientific knowledge. That is, include only obscure knowledge. Just add the fact, not any exclamations about how fascinating it is. Put the science fact in a new paragraph." : ""}
+    ${trueOrFalse ? "Throw in a random cool science fact for fun as well. Don't repeat them. The fact should be suitable for someone who already has broad scientific knowledge. That is, include only obscure knowledge. Just add the fact, not any exclamations about how fascinating it is. Put the science fact in a new paragraph." : ""}
 
     Everything should be 3 sentences at most.  Address him as "tu", not "vous"`;
     const messages = [
@@ -27221,6 +27221,7 @@ Correct: ${puzzle2.prompt}`
         });
       }
     }
+    messages.splice(0, messages.length - 20);
     messages.push({
       role: "user",
       content: `Guess: ${puzzle.guesses[0].text}
