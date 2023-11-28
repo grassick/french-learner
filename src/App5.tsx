@@ -297,23 +297,23 @@ function PuzzleComponent(props: {
       },
     ]
 
-    for (const puzzle of props.allPuzzles) {
-      if (puzzle == props.puzzle) break
+    // for (const puzzle of props.allPuzzles) {
+    //   if (puzzle == props.puzzle) break
 
-      if (puzzle.status === "complete" && puzzle.feedback) {
-        messages.push({
-          role: "user",
-          content: `Guess: ${puzzle.guesses[0].text}\nCorrect: ${puzzle.prompt}`
-        })
-        messages.push({
-          role: "assistant",
-          content: puzzle.feedback
-        })
-      }
-    }
+    //   if (puzzle.status === "complete" && puzzle.feedback) {
+    //     messages.push({
+    //       role: "user",
+    //       content: `Guess: ${puzzle.guesses[0].text}\nCorrect: ${puzzle.prompt}`
+    //     })
+    //     messages.push({
+    //       role: "assistant",
+    //       content: puzzle.feedback
+    //     })
+    //   }
+    // }
 
-    // Only keep last 20 messages
-    messages.splice(0, messages.length - 20)
+    // // Only keep last 20 messages
+    // messages.splice(0, messages.length - 20)
 
     messages.push({
       role: "user",

@@ -27206,22 +27206,6 @@ function PuzzleComponent(props) {
         content: system
       }
     ];
-    for (const puzzle2 of props.allPuzzles) {
-      if (puzzle2 == props.puzzle)
-        break;
-      if (puzzle2.status === "complete" && puzzle2.feedback) {
-        messages.push({
-          role: "user",
-          content: `Guess: ${puzzle2.guesses[0].text}
-Correct: ${puzzle2.prompt}`
-        });
-        messages.push({
-          role: "assistant",
-          content: puzzle2.feedback
-        });
-      }
-    }
-    messages.splice(0, messages.length - 20);
     messages.push({
       role: "user",
       content: `Guess: ${puzzle.guesses[0].text}
