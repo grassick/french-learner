@@ -143,7 +143,7 @@ export function App5(props: {}) {
       </div>
 
       {session.puzzles
-        .slice(0, lastDisplayedIndex + 1)
+        .slice(lastDisplayedIndex, lastDisplayedIndex + 1)
         .map((puzzle, index) => (
           <PuzzleComponent
             allPuzzles={session.puzzles}
@@ -277,7 +277,7 @@ function PuzzleComponent(props: {
 
   async function getFeedback() {
     // Randomly choose true or false that is about 30% true
-    const trueOrFalse = Math.random() < 0.3 ? "true" : "false"
+    const trueOrFalse = Math.random() < 0.3 ? true : false
 
     const system = `You are a French tutor to a 10 year old francophone boy. Given his guess and the correct answers for dictation, you provide short, pithy advice in French if he made a mistake. If he got it right, congratulate him. 
 
@@ -320,20 +320,25 @@ function PuzzleComponent(props: {
       content: `Guess: ${puzzle.guesses[0].text}\nCorrect: ${puzzle.prompt}`
     })
 
-    // Call OpenAI
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4-1106-preview",
-      temperature: 1,
-      messages: messages,
-    })
+    setBusy(true)
 
+    try {
+      // Call OpenAI
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4-1106-preview",
+        temperature: 1,
+        messages: messages,
+      })
 
-    // Get response
-    const response = completion.choices[0].message?.content || ""
+      // Get response
+      const response = completion.choices[0].message?.content || ""
 
-    console.log(response)
+      console.log(response)
 
-    updateFeedback(response)
+      updateFeedback(response)
+    } finally {
+      setBusy(false)
+    }
   }
 
   async function speak(text: string) {

@@ -1087,7 +1087,7 @@ var require_react_development = __commonJS({
           }
           return dispatcher.useContext(Context);
         }
-        function useState5(initialState) {
+        function useState7(initialState) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useState(initialState);
         }
@@ -1099,7 +1099,7 @@ var require_react_development = __commonJS({
           var dispatcher = resolveDispatcher();
           return dispatcher.useRef(initialValue);
         }
-        function useEffect3(create, deps) {
+        function useEffect5(create, deps) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useEffect(create, deps);
         }
@@ -1115,7 +1115,7 @@ var require_react_development = __commonJS({
           var dispatcher = resolveDispatcher();
           return dispatcher.useCallback(callback, deps);
         }
-        function useMemo(create, deps) {
+        function useMemo2(create, deps) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useMemo(create, deps);
         }
@@ -1881,15 +1881,15 @@ var require_react_development = __commonJS({
         exports.useContext = useContext;
         exports.useDebugValue = useDebugValue;
         exports.useDeferredValue = useDeferredValue;
-        exports.useEffect = useEffect3;
+        exports.useEffect = useEffect5;
         exports.useId = useId;
         exports.useImperativeHandle = useImperativeHandle;
         exports.useInsertionEffect = useInsertionEffect;
         exports.useLayoutEffect = useLayoutEffect2;
-        exports.useMemo = useMemo;
+        exports.useMemo = useMemo2;
         exports.useReducer = useReducer;
         exports.useRef = useRef2;
-        exports.useState = useState5;
+        exports.useState = useState7;
         exports.useSyncExternalStore = useSyncExternalStore;
         exports.useTransition = useTransition;
         exports.version = ReactVersion;
@@ -2385,9 +2385,9 @@ var require_react_dom_development = __commonJS({
         if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== "undefined" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart === "function") {
           __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(new Error());
         }
-        var React6 = require_react();
+        var React7 = require_react();
         var Scheduler = require_scheduler();
-        var ReactSharedInternals = React6.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+        var ReactSharedInternals = React7.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
         var suppressWarning = false;
         function setSuppressWarning(newSuppressWarning) {
           {
@@ -3992,7 +3992,7 @@ var require_react_dom_development = __commonJS({
           {
             if (props.value == null) {
               if (typeof props.children === "object" && props.children !== null) {
-                React6.Children.forEach(props.children, function(child) {
+                React7.Children.forEach(props.children, function(child) {
                   if (child == null) {
                     return;
                   }
@@ -12439,7 +12439,7 @@ var require_react_dom_development = __commonJS({
           }
         }
         var fakeInternalInstance = {};
-        var emptyRefsObject = new React6.Component().refs;
+        var emptyRefsObject = new React7.Component().refs;
         var didWarnAboutStateAssignmentForComponent;
         var didWarnAboutUninitializedState;
         var didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate;
@@ -23480,7 +23480,7 @@ var require_react_dom = __commonJS({
 });
 
 // src/index.tsx
-var import_react6 = __toESM(require_react());
+var import_react7 = __toESM(require_react());
 var import_react_dom = __toESM(require_react_dom());
 
 // src/SessionEditor.tsx
@@ -27100,7 +27100,7 @@ function App5(props) {
         }]
       }));
     }
-  } }, "Ajouter une phrase"), /* @__PURE__ */ import_react5.default.createElement("div", null, /* @__PURE__ */ import_react5.default.createElement("select", { className: "form-select", value: voice, onChange: (e) => setVoice(e.target.value) }, /* @__PURE__ */ import_react5.default.createElement("option", { value: "alloy" }, "Alloy"), /* @__PURE__ */ import_react5.default.createElement("option", { value: "echo" }, "Echo"), /* @__PURE__ */ import_react5.default.createElement("option", { value: "fable" }, "Fable"), /* @__PURE__ */ import_react5.default.createElement("option", { value: "onyx" }, "Onyx"), /* @__PURE__ */ import_react5.default.createElement("option", { value: "nova" }, "Nova"), /* @__PURE__ */ import_react5.default.createElement("option", { value: "shimmer" }, "Shimmer"))))), session.puzzles.slice(0, lastDisplayedIndex + 1).map((puzzle, index) => /* @__PURE__ */ import_react5.default.createElement(
+  } }, "Ajouter une phrase"), /* @__PURE__ */ import_react5.default.createElement("div", null, /* @__PURE__ */ import_react5.default.createElement("select", { className: "form-select", value: voice, onChange: (e) => setVoice(e.target.value) }, /* @__PURE__ */ import_react5.default.createElement("option", { value: "alloy" }, "Alloy"), /* @__PURE__ */ import_react5.default.createElement("option", { value: "echo" }, "Echo"), /* @__PURE__ */ import_react5.default.createElement("option", { value: "fable" }, "Fable"), /* @__PURE__ */ import_react5.default.createElement("option", { value: "onyx" }, "Onyx"), /* @__PURE__ */ import_react5.default.createElement("option", { value: "nova" }, "Nova"), /* @__PURE__ */ import_react5.default.createElement("option", { value: "shimmer" }, "Shimmer"))))), session.puzzles.slice(lastDisplayedIndex, lastDisplayedIndex + 1).map((puzzle, index) => /* @__PURE__ */ import_react5.default.createElement(
     PuzzleComponent,
     {
       allPuzzles: session.puzzles,
@@ -27190,7 +27190,7 @@ function PuzzleComponent(props) {
     onPuzzleChange(newPuzzle);
   });
   async function getFeedback() {
-    const trueOrFalse = Math.random() < 0.3 ? "true" : "false";
+    const trueOrFalse = Math.random() < 0.3 ? true : false;
     const system = `You are a French tutor to a 10 year old francophone boy. Given his guess and the correct answers for dictation, you provide short, pithy advice in French if he made a mistake. If he got it right, congratulate him. 
 
     Output should be the raw text of your output to him. Keep it brief and positive. He already figured out the correct answer in later guesses that are not shown to you. He already knows what wasn't correct, so don't repeat that.
@@ -27211,14 +27211,19 @@ function PuzzleComponent(props) {
       content: `Guess: ${puzzle.guesses[0].text}
 Correct: ${puzzle.prompt}`
     });
-    const completion = await openai2.chat.completions.create({
-      model: "gpt-4-1106-preview",
-      temperature: 1,
-      messages
-    });
-    const response = completion.choices[0].message?.content || "";
-    console.log(response);
-    updateFeedback(response);
+    setBusy(true);
+    try {
+      const completion = await openai2.chat.completions.create({
+        model: "gpt-4-1106-preview",
+        temperature: 1,
+        messages
+      });
+      const response = completion.choices[0].message?.content || "";
+      console.log(response);
+      updateFeedback(response);
+    } finally {
+      setBusy(false);
+    }
   }
   async function speak(text) {
     try {
@@ -27300,14 +27305,499 @@ function usePersistedState2(key, defaultValue) {
   return [state, setState];
 }
 
-// src/index.tsx
-if (window.location.hash === "#edit") {
-  import_react_dom.default.render(/* @__PURE__ */ import_react6.default.createElement(SessionEditorApp, null), document.getElementById("root"));
-} else if (window.location.hash === "#misc") {
-  import_react_dom.default.render(/* @__PURE__ */ import_react6.default.createElement(Misc, null), document.getElementById("root"));
-} else {
-  import_react_dom.default.render(/* @__PURE__ */ import_react6.default.createElement(App5, null), document.getElementById("root"));
+// src/HashHistory.ts
+var HashHistory = class {
+  /** Index of current page in stack. Used to determine if push or pop */
+  index;
+  /** Listeners for location changes */
+  locationListeners;
+  /** Listeners for blockers */
+  blockerListeners;
+  /** Number of popstate events to ignore */
+  ignoringPopstate;
+  /** Current location */
+  currentLocation;
+  constructor() {
+    this.locationListeners = [];
+    this.blockerListeners = [];
+    this.ignoringPopstate = 0;
+    this.index = 0;
+    history.replaceState(0, "", window.location.hash || "#/");
+    this.currentLocation = this.getLocation();
+    window.addEventListener("popstate", this.handlePopstate);
+  }
+  /** Gets the current location */
+  getLocation() {
+    const uri = (window.location.hash || "#").substr(1);
+    return this.parseLocation(uri, this.index);
+  }
+  /** Convenience getter */
+  get location() {
+    return this.getLocation();
+  }
+  /** Parse a location. Uri should not include initial "#" */
+  parseLocation(uri, index) {
+    const match = uri.match(/^(.*?)(\?.*?)?(#.*)?$/);
+    return {
+      pathname: match[1] || "/",
+      search: match[2] || "",
+      hash: match[3] || "",
+      uri: uri || "/",
+      index
+    };
+  }
+  handlePopstate = async (ev) => {
+    if (this.ignoringPopstate > 0) {
+      this.ignoringPopstate--;
+      return;
+    }
+    const delta = ev.state === null ? 1 : ev.state - this.index;
+    this.index += delta;
+    const blocked = await this.checkBlockers(this.getLocation());
+    if (blocked) {
+      this.ignoringPopstate++;
+      this.index -= delta;
+      history.go(-delta);
+      return;
+    }
+    history.replaceState(this.index, "");
+    const location = this.getLocation();
+    this.currentLocation = location;
+    this.notifyLocationListeners(location);
+  };
+  /** Add listener to final changes in location. Returns unsubscribe */
+  addLocationListener(listener) {
+    this.locationListeners.push(listener);
+    return () => {
+      this.locationListeners = this.locationListeners.filter((l) => l != listener);
+    };
+  }
+  /** Add listener to block location changes. Returns unsubscribe */
+  addBlockerListener(listener) {
+    this.blockerListeners.push(listener);
+    return () => {
+      this.blockerListeners = this.blockerListeners.filter((l) => l != listener);
+    };
+  }
+  notifyLocationListeners(location) {
+    for (const listener of this.locationListeners) {
+      listener(location);
+    }
+  }
+  /** Check if a new location is going to be blocked */
+  async checkBlockers(newLocation) {
+    for (const listener of this.blockerListeners) {
+      if (await listener(this.currentLocation, newLocation)) {
+        return true;
+      }
+    }
+    return false;
+  }
+  async push(location, options) {
+    const silent = options?.silent ?? false;
+    if (typeof location !== "string") {
+      if (typeof location.search === "string") {
+        location = location.pathname + (location.search || "");
+      } else {
+        const searchObj = location.query || {};
+        location = location.pathname + "?" + Object.keys(searchObj).map((key) => key + "=" + encodeURIComponent(searchObj[key] ?? "")).join("&");
+      }
+    }
+    const newLocation = this.parseLocation(location, this.index + 1);
+    if (!silent) {
+      if (await this.checkBlockers(newLocation)) {
+        return;
+      }
+    }
+    this.index += 1;
+    history.pushState(this.index, "", "#" + location);
+    this.currentLocation = this.getLocation();
+    if (!silent) {
+      this.notifyLocationListeners(this.getLocation());
+    }
+  }
+  async replace(location, options) {
+    const silent = options?.silent ?? false;
+    if (typeof location !== "string") {
+      if (typeof location.search === "string") {
+        location = location.pathname + (location.search || "");
+      } else {
+        const searchObj = location.query || {};
+        location = location.pathname + "?" + Object.keys(searchObj).map((key) => key + "=" + encodeURIComponent(searchObj[key] ?? "")).join("&");
+      }
+    }
+    const newLocation = this.parseLocation(location, this.index + 1);
+    if (!silent) {
+      if (await this.checkBlockers(newLocation)) {
+        return;
+      }
+    }
+    history.replaceState(this.index, "", "#" + location);
+    this.currentLocation = this.getLocation();
+    if (!silent) {
+      this.notifyLocationListeners(this.getLocation());
+    }
+  }
+  /** Go back. Calls history.back() 
+   * @param options.silent: Do not notify listeners or check blockers
+  */
+  back(options) {
+    const silent = options?.silent ?? false;
+    if (silent) {
+      this.ignoringPopstate++;
+    }
+    history.back();
+  }
+};
+
+// src/AppSpeed.tsx
+var import_react6 = __toESM(require_react());
+
+// node_modules/uuid/dist/esm-browser/rng.js
+var getRandomValues;
+var rnds8 = new Uint8Array(16);
+function rng() {
+  if (!getRandomValues) {
+    getRandomValues = typeof crypto !== "undefined" && crypto.getRandomValues && crypto.getRandomValues.bind(crypto);
+    if (!getRandomValues) {
+      throw new Error("crypto.getRandomValues() not supported. See https://github.com/uuidjs/uuid#getrandomvalues-not-supported");
+    }
+  }
+  return getRandomValues(rnds8);
 }
+
+// node_modules/uuid/dist/esm-browser/stringify.js
+var byteToHex = [];
+for (let i = 0; i < 256; ++i) {
+  byteToHex.push((i + 256).toString(16).slice(1));
+}
+function unsafeStringify(arr, offset = 0) {
+  return byteToHex[arr[offset + 0]] + byteToHex[arr[offset + 1]] + byteToHex[arr[offset + 2]] + byteToHex[arr[offset + 3]] + "-" + byteToHex[arr[offset + 4]] + byteToHex[arr[offset + 5]] + "-" + byteToHex[arr[offset + 6]] + byteToHex[arr[offset + 7]] + "-" + byteToHex[arr[offset + 8]] + byteToHex[arr[offset + 9]] + "-" + byteToHex[arr[offset + 10]] + byteToHex[arr[offset + 11]] + byteToHex[arr[offset + 12]] + byteToHex[arr[offset + 13]] + byteToHex[arr[offset + 14]] + byteToHex[arr[offset + 15]];
+}
+
+// node_modules/uuid/dist/esm-browser/native.js
+var randomUUID = typeof crypto !== "undefined" && crypto.randomUUID && crypto.randomUUID.bind(crypto);
+var native_default = {
+  randomUUID
+};
+
+// node_modules/uuid/dist/esm-browser/v4.js
+function v4(options, buf, offset) {
+  if (native_default.randomUUID && !buf && !options) {
+    return native_default.randomUUID();
+  }
+  options = options || {};
+  const rnds = options.random || (options.rng || rng)();
+  rnds[6] = rnds[6] & 15 | 64;
+  rnds[8] = rnds[8] & 63 | 128;
+  if (buf) {
+    offset = offset || 0;
+    for (let i = 0; i < 16; ++i) {
+      buf[offset + i] = rnds[i];
+    }
+    return buf;
+  }
+  return unsafeStringify(rnds);
+}
+var v4_default = v4;
+
+// src/AppSpeed.tsx
+var openAIKey3 = localStorage.getItem("openAIKey");
+if (!openAIKey3) {
+  openAIKey3 = prompt("Please enter your OpenAI key");
+  if (!openAIKey3) {
+    throw new Error("No OpenAI key provided");
+  }
+  localStorage.setItem("openAIKey", openAIKey3);
+}
+var openai3 = new openai_default({
+  apiKey: openAIKey3,
+  dangerouslyAllowBrowser: true
+});
+var initialPhrases2 = [
+  "Il est souvent impatient.",
+  "Son talent est important.",
+  "Tu sembles inattentif.",
+  "C'est tr\xE8s inhabituel.",
+  "L'infirmier voyage souvent.",
+  "Le patinage est amusant.",
+  "J'ai une inspiration.",
+  "Joue des instruments.",
+  "L'intervention est rapide.",
+  "Il reste immobile.",
+  "C'est mon intention.",
+  "Ainsi commence l'histoire.",
+  "J'ai l'information n\xE9cessaire.",
+  "C'est imprudent de courir.",
+  "L'incendie est effrayant.",
+  "Chaque individu est unique.",
+  "L'indiff\xE9rence blesse parfois.",
+  "La table est inutile.",
+  "Elle s'est install\xE9e ici.",
+  "C'\xE9tait impr\xE9vu!",
+  "Ton dessin est joli.",
+  "Le m\xE9decin examine.",
+  "C'est un jeu enfantin.",
+  "Ce geste semble mesquin.",
+  "Le destin nous surprend.",
+  "La robe est f\xE9minine.",
+  "Le style est masculin.",
+  "Un clin d'oeil amical.",
+  "Le chat rouquin dort.",
+  "L'examen commence demain.",
+  "Un d\xE9tail anodin.",
+  "J'aime ce bouquin.",
+  "Il retrouve son copain.",
+  "Le verre est cristallin.",
+  "Le soleil d\xE9cline.",
+  "Le festin commence.",
+  "Regarde ce gamin.",
+  "L'orphelin sourit.",
+  "Le parchemin est vieux.",
+  "Le venin est dangereux.",
+  "J'aime dessiner.",
+  "Allez, on joue!",
+  "J'ai beaucoup \xE0 avoir.",
+  "\xCAtre ou ne pas \xEAtre.",
+  "Je finis mes devoirs.",
+  "Nous commen\xE7ons maintenant.",
+  "Je mange une pomme.",
+  "Il dit la v\xE9rit\xE9.",
+  "De voir est croire.",
+  "Je fais mes devoirs.",
+  "Mettez vos chaussures.",
+  "J'ouvre la fen\xEAtre.",
+  "Nous partons demain.",
+  "Je peux aider.",
+  "Je prends un livre.",
+  "Je rends le livre.",
+  "Je sais nager.",
+  "Je tiens la main.",
+  "Je viens de l\xE0.",
+  "Venez voir \xE7a!",
+  "Je veux jouer."
+];
+function AppSpeed(props) {
+  const [session, setSession] = usePersistedState3("sessions_speed", {
+    puzzles: initialPhrases2.map((prompt2) => ({
+      id: v4_default(),
+      type: "speed",
+      prompt: prompt2,
+      guesses: [],
+      status: "pending"
+    }))
+  });
+  const [voice, setVoice] = (0, import_react6.useState)("onyx");
+  let lastDisplayedIndex = session.puzzles.findIndex((puzzle) => puzzle.status === "pending");
+  if (lastDisplayedIndex === -1) {
+    lastDisplayedIndex = session.puzzles.length - 1;
+  }
+  return /* @__PURE__ */ import_react6.default.createElement("div", { className: "container" }, /* @__PURE__ */ import_react6.default.createElement("h2", { className: "text-center my-4" }, "Application d'entra\xEEnement au fran\xE7ais"), /* @__PURE__ */ import_react6.default.createElement("div", { className: "sticky-top p-3 d-flex justify-content-between mb-3 bg-body" }, /* @__PURE__ */ import_react6.default.createElement("div", null, /* @__PURE__ */ import_react6.default.createElement("button", { className: "btn btn-secondary btn-sm", onClick: () => {
+    const phrase = window.prompt("Enter a phrase");
+    if (phrase) {
+      setSession((prevState) => ({
+        puzzles: [...prevState.puzzles, {
+          id: v4_default(),
+          type: "speed",
+          prompt: phrase,
+          guesses: [],
+          status: "pending"
+        }]
+      }));
+    }
+  } }, "Ajouter une phrase"), /* @__PURE__ */ import_react6.default.createElement("div", null, /* @__PURE__ */ import_react6.default.createElement("select", { className: "form-select", value: voice, onChange: (e) => setVoice(e.target.value) }, /* @__PURE__ */ import_react6.default.createElement("option", { value: "alloy" }, "Alloy"), /* @__PURE__ */ import_react6.default.createElement("option", { value: "echo" }, "Echo"), /* @__PURE__ */ import_react6.default.createElement("option", { value: "fable" }, "Fable"), /* @__PURE__ */ import_react6.default.createElement("option", { value: "onyx" }, "Onyx"), /* @__PURE__ */ import_react6.default.createElement("option", { value: "nova" }, "Nova"), /* @__PURE__ */ import_react6.default.createElement("option", { value: "shimmer" }, "Shimmer"))))), session.puzzles.slice(0, lastDisplayedIndex + 1).map((puzzle, index) => /* @__PURE__ */ import_react6.default.createElement(
+    PuzzleComponent2,
+    {
+      key: puzzle.id,
+      allPuzzles: session.puzzles.slice(0, index + 1),
+      puzzle,
+      onPuzzleChange: (puzzle2) => {
+        const puzzles = session.puzzles.slice();
+        puzzles[index] = puzzle2;
+        setSession({ puzzles });
+      },
+      onPuzzleDelete: () => {
+        const puzzles = session.puzzles.slice();
+        puzzles.splice(index, 1);
+        setSession({ puzzles });
+      },
+      voice
+    }
+  )));
+}
+function PuzzleComponent2(props) {
+  const { puzzle, onPuzzleChange, allPuzzles } = props;
+  const [guess, setGuess] = (0, import_react6.useState)(puzzle.guesses[puzzle.guesses.length - 1]?.text || "");
+  const [busy, setBusy] = (0, import_react6.useState)(false);
+  const [speaking, setSpeaking] = (0, import_react6.useState)(false);
+  const [elapsedTime, setElapsedTime] = (0, import_react6.useState)(void 0);
+  const charsPerSecond = (0, import_react6.useMemo)(() => {
+    let cps = 1.1;
+    for (const p of allPuzzles) {
+      if (p.status != "complete") {
+        continue;
+      }
+      const numChars = p.prompt.length;
+      const expectedTime2 = numChars / cps;
+      if (p.time > expectedTime2) {
+        cps *= Math.pow(1.1, 1 / 5);
+      } else {
+        cps *= Math.pow(1.1, -1);
+      }
+    }
+    return cps;
+  }, [allPuzzles]);
+  const expectedTime = (0, import_react6.useMemo)(() => {
+    const numChars = puzzle.prompt.length;
+    const expectedTime2 = numChars / charsPerSecond;
+    return expectedTime2;
+  }, [puzzle.prompt, charsPerSecond]);
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      correctGuess();
+    }
+  };
+  function correctGuess() {
+    const result = diffWords(guess, puzzle.prompt);
+    let offset = 0;
+    const errors = [];
+    for (let i = 0; i < result.length; i++) {
+      const change = result[i];
+      if (change.removed) {
+        errors.push({
+          offset,
+          length: change.value.length,
+          better: void 0
+        });
+      }
+      if (change.added && i > 0) {
+        const prevChange = result[i - 1];
+        if (prevChange.removed) {
+          errors[errors.length - 1].better = change.value;
+        }
+        continue;
+      }
+      offset += change.value.length;
+    }
+    const newPuzzle = {
+      ...puzzle,
+      guesses: [
+        ...puzzle.guesses,
+        {
+          text: guess,
+          errors
+        }
+      ]
+    };
+    if (errors.length === 0) {
+      newPuzzle.status = "complete";
+      newPuzzle.time = elapsedTime;
+      setElapsedTime(void 0);
+      setGuess("");
+    }
+    onPuzzleChange(newPuzzle);
+  }
+  (0, import_react6.useEffect)(() => {
+    if (elapsedTime === void 0 || puzzle.status === "complete") {
+      return;
+    }
+    const timer = setTimeout(() => {
+      setElapsedTime(elapsedTime + 0.1);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [elapsedTime]);
+  async function speak(text) {
+    try {
+      setSpeaking(true);
+      const speech = await openai3.audio.speech.create({
+        model: "tts-1",
+        voice: props.voice,
+        input: text
+      });
+      console.log(speech);
+      let audio = new Audio(URL.createObjectURL(await speech.blob()));
+      await audio.play();
+      await new Promise((resolve) => setTimeout(resolve, 1e3));
+      setElapsedTime((elapsedTime2) => elapsedTime2 || 0);
+    } finally {
+      setSpeaking(false);
+    }
+  }
+  function renderPrompt() {
+    if (puzzle.status === "complete") {
+      return null;
+    }
+    return /* @__PURE__ */ import_react6.default.createElement("div", null, /* @__PURE__ */ import_react6.default.createElement("button", { className: "btn btn-secondary", onClick: () => speak(props.puzzle.prompt), disabled: speaking }, "Prononcer l'indice"));
+  }
+  const finalElapsed = elapsedTime !== void 0 ? elapsedTime : puzzle.time;
+  const fractionElapsed = finalElapsed !== void 0 ? finalElapsed / expectedTime : 0;
+  const fractionRemaining = 1 - fractionElapsed;
+  return /* @__PURE__ */ import_react6.default.createElement("div", { className: "mt-4", style: { borderTop: "solid 1px #888", paddingTop: 20 } }, /* @__PURE__ */ import_react6.default.createElement("h5", null, renderPrompt()), finalElapsed != null && /* @__PURE__ */ import_react6.default.createElement("div", { className: "progress", style: { marginBottom: 10, marginTop: 10 } }, fractionRemaining < 0 ? /* @__PURE__ */ import_react6.default.createElement("div", { key: "full", className: "progress-bar bg-warning", style: { width: `100%` } }) : /* @__PURE__ */ import_react6.default.createElement("div", { key: "going", className: "progress-bar", style: { width: `${fractionRemaining * 100}%` } })), /* @__PURE__ */ import_react6.default.createElement(GuessesComponent2, { guesses: props.puzzle.guesses }), props.puzzle.status !== "complete" && /* @__PURE__ */ import_react6.default.createElement("div", { className: "input-group mb-3" }, /* @__PURE__ */ import_react6.default.createElement("input", { type: "text", className: "form-control", placeholder: "Entrez votre supposition", value: guess, onChange: (e) => setGuess(e.target.value), onKeyDown: handleKeyDown, disabled: busy }), /* @__PURE__ */ import_react6.default.createElement("button", { className: "btn btn-primary", type: "button", onClick: () => {
+    correctGuess();
+  }, disabled: busy }, "Deviner")));
+}
+function GuessesComponent2(props) {
+  return /* @__PURE__ */ import_react6.default.createElement("div", null, props.guesses.map((guess) => /* @__PURE__ */ import_react6.default.createElement(GuessComponent2, { guess })));
+}
+function GuessComponent2(props) {
+  return /* @__PURE__ */ import_react6.default.createElement("div", { style: { fontSize: 18, margin: 15, lineHeight: 2 } }, props.guess.text.split("").map((char, index) => {
+    const error = props.guess.errors.find((e) => index >= e.offset && index < e.offset + e.length);
+    const prevError = props.guess.errors.find((e) => index - 1 >= e.offset && index - 1 < e.offset + e.length);
+    const currentError = char.trim() ? error : prevError;
+    return /* @__PURE__ */ import_react6.default.createElement(
+      "span",
+      {
+        style: {
+          //            backgroundColor: error ? '#ff000060' : '#00ff0060', 
+          backgroundColor: currentError ? void 0 : "#00ff0060",
+          padding: index === 0 ? "5px 0px 5px 5px" : index === props.guess.text.length - 1 ? "5px 5px 5px 0px" : "5px 0px",
+          userSelect: "none"
+        },
+        onDoubleClick: (ev) => {
+          ev.preventDefault();
+          ev.stopPropagation();
+          if (error) {
+            alert(error.better || "No suggestion available");
+          }
+        }
+      },
+      char
+    );
+  }));
+}
+function usePersistedState3(key, defaultValue) {
+  const [state, setState] = (0, import_react6.useState)(() => {
+    const storedValue = window.localStorage.getItem(key);
+    return storedValue !== null ? JSON.parse(storedValue) : defaultValue;
+  });
+  (0, import_react6.useEffect)(() => {
+    window.localStorage.setItem(key, JSON.stringify(state));
+  }, [key, state]);
+  return [state, setState];
+}
+
+// src/index.tsx
+var hashHistory = new HashHistory();
+function MainApp(props) {
+  const [location, setLocation] = (0, import_react7.useState)(hashHistory.location);
+  (0, import_react7.useEffect)(() => {
+    return hashHistory.addLocationListener(setLocation);
+  }, []);
+  if (location.pathname === "/edit") {
+    return /* @__PURE__ */ import_react7.default.createElement(SessionEditorApp, null);
+  }
+  if (location.pathname === "/misc") {
+    return /* @__PURE__ */ import_react7.default.createElement(Misc, null);
+  }
+  if (location.pathname === "/speed") {
+    return /* @__PURE__ */ import_react7.default.createElement(AppSpeed, null);
+  }
+  if (location.pathname === "/") {
+    return /* @__PURE__ */ import_react7.default.createElement(App5, null);
+  }
+}
+import_react_dom.default.render(/* @__PURE__ */ import_react7.default.createElement(MainApp, null), document.getElementById("root"));
 /*! Bundled license information:
 
 react/cjs/react.development.js:
