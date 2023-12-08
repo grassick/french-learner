@@ -419,6 +419,11 @@ function PuzzleComponent(props: {
         {renderPrompt()}
       </h5>
       <GuessesComponent guesses={props.puzzle.guesses} />
+      { props.puzzle.status === "complete" && props.puzzle.guesses.length == 1 &&
+        <div style={{ color: "yellow", fontSize: 20, textAlign: "center" }}>
+          	&#9733; &#9733; &#9733; &#9733; &#9733;
+        </div>
+      } 
       {busy &&
         <div className="spinner-border text-secondary" role="status">
           <span className="visually-hidden">Loading...</span>
