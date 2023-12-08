@@ -48,6 +48,10 @@ function MainApp(props: {}) {
   if (location.pathname === '/') {
     return <App5 />
   }
+
+  else {
+    return <div>404 for {location.pathname}</div>
+  }
 }
 
 ReactDOM.render(<MainApp />, document.getElementById('root'))

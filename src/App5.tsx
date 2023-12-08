@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import OpenAI from 'openai';
 import { useStableCallback } from "./useStableCallback";
 import { diffWords } from 'diff'
+import ConfettiExplosion from 'react-confetti-explosion'
 
 let openAIKey = localStorage.getItem('openAIKey')
 
@@ -143,7 +144,7 @@ export function App5(props: {}) {
       </div>
 
       {session.puzzles
-        .slice(lastDisplayedIndex, lastDisplayedIndex + 1)
+        .slice(0, lastDisplayedIndex + 1)
         .map((puzzle, index) => (
           <PuzzleComponent
             allPuzzles={session.puzzles}
@@ -194,6 +195,8 @@ function PuzzleComponent(props: {
   const [busy, setBusy] = useState(false)
 
   const [speaking, setSpeaking] = useState(false)
+
+  const [showConfetti, setShowConfetti] = useState(false)
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
@@ -259,9 +262,16 @@ function PuzzleComponent(props: {
       }
       newPuzzle.score = score
       setGuess("")
-      getFeedback().catch(err => {
-        console.error(err)
-      })
+
+      if (numInitialErrors === 0) {
+        setShowConfetti(true)
+        setTimeout(() => setShowConfetti(false), 3000)
+      }
+      else {
+        getFeedback().catch(err => {
+          console.error(err)
+        })
+      }
     }
 
     onPuzzleChange(newPuzzle)
@@ -276,16 +286,16 @@ function PuzzleComponent(props: {
   })
 
   async function getFeedback() {
-    // Randomly choose true or false that is about 30% true
-    const trueOrFalse = Math.random() < 0.3 ? true : false
+    // // Randomly choose true or false that is about 30% true
+    // const trueOrFalse = Math.random() < 0.3 ? true : false
+    
+    // ${trueOrFalse ? "Throw in a random cool science fact for fun as well. Don't repeat them. The fact should be suitable for someone who already has broad scientific knowledge. That is, include only obscure knowledge. Just add the fact, not any exclamations about how fascinating it is. Put the science fact in a new paragraph." : ""}
 
-    const system = `You are a French tutor to a 10 year old francophone boy. Given his guess and the correct answers for dictation, you provide short, pithy advice in French if he made a mistake. If he got it right, congratulate him. 
+    const system = `You are a French tutor to a 10 year old francophone boy. Given his guess and the correct answers for dictation, you provide short, pithy advice in French if he made a mistake. 
 
     Output should be the raw text of your output to him. Keep it brief and positive. He already figured out the correct answer in later guesses that are not shown to you. He already knows what wasn't correct, so don't repeat that.
     
     Give helpful general rules and tips, not correction of the specific words and ONLY if there is a general rule to learn from his mistake. He already wrote out the correct sentence, so don't tell him about spelling, unless there is a general rule of thumb to learn. The advice should be simple enough for a 10 year old to understand.
-    
-    ${trueOrFalse ? "Throw in a random cool science fact for fun as well. Don't repeat them. The fact should be suitable for someone who already has broad scientific knowledge. That is, include only obscure knowledge. Just add the fact, not any exclamations about how fascinating it is. Put the science fact in a new paragraph." : ""}
 
     Everything should be 3 sentences at most.  Address him as "tu", not "vous"`
 
@@ -437,6 +447,14 @@ function PuzzleComponent(props: {
           <button className="btn btn-primary" type="button" onClick={() => { correctGuess() }} disabled={busy}>
             Deviner
           </button>
+          {showConfetti &&
+            <ConfettiExplosion
+              force={0.8}
+              duration={3000}
+              particleCount={250}
+              width={1600}              
+            />
+          }
         </div>
       }
     </div>

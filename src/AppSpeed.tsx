@@ -220,7 +220,7 @@ function PuzzleComponent(props: {
 
   // Determine the current characters per second
   const charsPerSecond = useMemo(() => {
-    let cps = 1.1
+    let cps = 0.7
 
     for (const p of allPuzzles) {
       if (p.status != "complete") {
@@ -253,6 +253,9 @@ function PuzzleComponent(props: {
     if (event.key === 'Enter') {
       event.preventDefault()
       correctGuess()
+    }
+    else {
+      setElapsedTime(elapsedTime => elapsedTime || 0)
     }
   }
 
@@ -331,11 +334,6 @@ function PuzzleComponent(props: {
       console.log(speech)
       let audio = new Audio(URL.createObjectURL(await speech.blob()))
       await audio.play()
-
-      // Wait a second before starting timer
-      await new Promise(resolve => setTimeout(resolve, 1000))
-
-      setElapsedTime(elapsedTime => elapsedTime || 0)
     }
     finally {
       setSpeaking(false)
