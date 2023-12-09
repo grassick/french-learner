@@ -421,7 +421,10 @@ function PuzzleComponent(props: {
       </h5>
       <GuessesComponent guesses={props.puzzle.guesses} />
       { props.puzzle.status === "complete" && props.puzzle.guesses.length == 1 &&
-        <div style={{ color: "yellow", fontSize: 20, textAlign: "center" }}>
+        <div style={{ color: "yellow", fontSize: 20, textAlign: "center" }} onClick={() => {
+          setShowConfetti(true)
+          setTimeout(() => setShowConfetti(false), 3000)
+        }}>
           	&#9733; &#9733; &#9733; &#9733; &#9733;
         </div>
       } 
