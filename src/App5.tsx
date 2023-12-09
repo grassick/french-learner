@@ -114,6 +114,7 @@ export function App5(props: {}) {
         <div>
           <h5>Score Total : {session.puzzles.reduce((total, puzzle) => total + puzzle.score, 0)}</h5>
           <h5>Score Le Plus Élevé : {Math.max(...session.puzzles.map(puzzle => puzzle.score))}</h5>
+          <h5>Total des mots terminés : {session.puzzles.filter(p => p.status === "complete").reduce((total, puzzle) => total + puzzle.prompt.split(" ").length, 0)}</h5>
         </div>
         <div>
           <button className="btn btn-secondary btn-sm" onClick={() => {
@@ -422,6 +423,11 @@ function PuzzleComponent(props: {
       { props.puzzle.status === "complete" && props.puzzle.guesses.length == 1 &&
         <div style={{ color: "yellow", fontSize: 20, textAlign: "center" }}>
           	&#9733; &#9733; &#9733; &#9733; &#9733;
+        </div>
+      } 
+      { props.puzzle.status === "complete" && props.puzzle.guesses.length == 2 &&
+        <div style={{ color: "yellow", fontSize: 20, textAlign: "center" }}>
+          	&#9733; &#9733; &#9733;
         </div>
       } 
       {busy &&
