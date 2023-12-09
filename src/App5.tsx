@@ -109,7 +109,7 @@ export function App5(props: {}) {
 
   return (
     <div className="container">
-      <h2 className="text-center my-4">Application d'entraînement au français</h2>
+      <h2 className="text-center my-4">Application d'entraînement au français (1.1)</h2>
       <div className="sticky-top p-3 d-flex justify-content-between mb-3 bg-body">
         <div>
           <h5>Score Total : {session.puzzles.reduce((total, puzzle) => total + puzzle.score, 0)}</h5>
