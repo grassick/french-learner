@@ -34737,9 +34737,7 @@ Correct: ${puzzle.prompt}`
   } }, "Sauter"), /* @__PURE__ */ import_react7.default.createElement("span", { style: { float: "right" } }, props.puzzle.status === "complete" && /* @__PURE__ */ import_react7.default.createElement("p", null, "Score : ", props.puzzle.score)), renderPrompt()), /* @__PURE__ */ import_react7.default.createElement(GuessesComponent, { guesses: props.puzzle.guesses }), props.puzzle.status === "complete" && props.puzzle.guesses.length == 1 && /* @__PURE__ */ import_react7.default.createElement("div", { style: { color: "yellow", fontSize: 20, textAlign: "center" }, onClick: () => {
     setShowConfetti(true);
     setTimeout(() => setShowConfetti(false), 3e3);
-  } }, "\u2605 \u2605 \u2605 \u2605 \u2605"), props.puzzle.status === "complete" && props.puzzle.guesses.length == 2 && /* @__PURE__ */ import_react7.default.createElement("div", { style: { color: "yellow", fontSize: 20, textAlign: "center" } }, "\u2605 \u2605 \u2605"), busy && /* @__PURE__ */ import_react7.default.createElement("div", { className: "spinner-border text-secondary", role: "status" }, /* @__PURE__ */ import_react7.default.createElement("span", { className: "visually-hidden" }, "Loading...")), props.puzzle.feedback && /* @__PURE__ */ import_react7.default.createElement("div", { className: "mb-3" }, /* @__PURE__ */ import_react7.default.createElement("div", { style: { whiteSpace: "pre-wrap", fontStyle: "italic" } }, props.puzzle.feedback)), props.puzzle.status !== "complete" && /* @__PURE__ */ import_react7.default.createElement("div", { className: "input-group mb-3" }, /* @__PURE__ */ import_react7.default.createElement("input", { type: "text", className: "form-control", placeholder: "Entrez votre supposition", value: guess, onChange: (e) => setGuess(e.target.value), onKeyDown: handleKeyDown, disabled: busy }), /* @__PURE__ */ import_react7.default.createElement("button", { className: "btn btn-primary", type: "button", onClick: () => {
-    correctGuess();
-  }, disabled: busy }, "Deviner"), showConfetti && /* @__PURE__ */ import_react7.default.createElement(
+  } }, "\u2605 \u2605 \u2605 \u2605 \u2605", showConfetti && /* @__PURE__ */ import_react7.default.createElement(
     ConfettiExplosion,
     {
       force: 0.8,
@@ -34747,7 +34745,9 @@ Correct: ${puzzle.prompt}`
       particleCount: 250,
       width: 1600
     }
-  )));
+  )), props.puzzle.status === "complete" && props.puzzle.guesses.length == 2 && /* @__PURE__ */ import_react7.default.createElement("div", { style: { color: "yellow", fontSize: 20, textAlign: "center" } }, "\u2605 \u2605 \u2605"), busy && /* @__PURE__ */ import_react7.default.createElement("div", { className: "spinner-border text-secondary", role: "status" }, /* @__PURE__ */ import_react7.default.createElement("span", { className: "visually-hidden" }, "Loading...")), props.puzzle.feedback && /* @__PURE__ */ import_react7.default.createElement("div", { className: "mb-3" }, /* @__PURE__ */ import_react7.default.createElement("div", { style: { whiteSpace: "pre-wrap", fontStyle: "italic" } }, props.puzzle.feedback)), props.puzzle.status !== "complete" && /* @__PURE__ */ import_react7.default.createElement("div", { className: "input-group mb-3" }, /* @__PURE__ */ import_react7.default.createElement("input", { type: "text", className: "form-control", placeholder: "Entrez votre supposition", value: guess, onChange: (e) => setGuess(e.target.value), onKeyDown: handleKeyDown, disabled: busy }), /* @__PURE__ */ import_react7.default.createElement("button", { className: "btn btn-primary", type: "button", onClick: () => {
+    correctGuess();
+  }, disabled: busy }, "Deviner")));
 }
 function GuessesComponent(props) {
   return /* @__PURE__ */ import_react7.default.createElement("div", null, props.guesses.map((guess) => /* @__PURE__ */ import_react7.default.createElement(GuessComponent, { guess })));

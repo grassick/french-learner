@@ -426,6 +426,14 @@ function PuzzleComponent(props: {
           setTimeout(() => setShowConfetti(false), 3000)
         }}>
           	&#9733; &#9733; &#9733; &#9733; &#9733;
+            {showConfetti &&
+            <ConfettiExplosion
+              force={0.8}
+              duration={3000}
+              particleCount={250}
+              width={1600}              
+            />
+          }
         </div>
       } 
       { props.puzzle.status === "complete" && props.puzzle.guesses.length == 2 &&
@@ -461,14 +469,6 @@ function PuzzleComponent(props: {
           <button className="btn btn-primary" type="button" onClick={() => { correctGuess() }} disabled={busy}>
             Deviner
           </button>
-          {showConfetti &&
-            <ConfettiExplosion
-              force={0.8}
-              duration={3000}
-              particleCount={250}
-              width={1600}              
-            />
-          }
         </div>
       }
     </div>
